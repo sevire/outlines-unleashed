@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="2.0">
+  <head><!-- <editor>
+      <sidebar visible="yes" width="197"/>
+      <column name="text" width="462"/>
+    </editor> -->
+    <title>Title?</title>
+    <dateCreated>Fri, 26 Jul 2019 17:08:42 GMT</dateCreated>
+    <expansionState>0,1,2,6</expansionState>
+    <vertScrollState>0</vertScrollState>
+    <windowTop>192</windowTop>
+    <windowLeft>0</windowLeft>
+    <windowRight>483</windowRight>
+    <windowBottom>845</windowBottom>
+  </head>
+  <body>
+    <outline text="Level Styles">
+      <outline text="Section 1">
+        <outline text="Subsection 1A">
+          <outline text="This document automatically styles each row based on its level."/>
+          <outline text="You can customize the “Level N Rows” styles in the sidebar however you like — in this document, or in any OmniOutliner document!"/>
+        </outline>
+        <outline text="Subsection 1B"/>
+      </outline>
+      <outline text="Section 2">
+        <outline text="Subsection 2A"/>
+        <outline text="Subsection 2B"/>
+      </outline>
+    </outline>
+  </body>
+</opml>

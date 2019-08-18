@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<opml version="1.0">
+  <head>
+    <title>opml-test-02</title>
+    <expansionState>0</expansionState>
+  </head>
+  <body>
+    <outline text="Top Level 1" NewColumn1="col1val" NewColumn2="2.00">
+      <outline/>
+      <outline text="sub 1-1"/>
+      <outline/>
+    </outline>
+    <outline text="Top Level 2"/>
+    <outline text="Top Level 3"/>
+    <outline text="Top Level 4"/>
+    <outline text="Top Level 5"/>
+  </body>
+</opml>
