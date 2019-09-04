@@ -1,11 +1,11 @@
-from outlinesunleashed.outline_node import OutlineNode
+from outlinesunleashed.outline_node import OldOutlineNode
 #from outlinesunleashed.types import AncestryEntry
 #import outlinesunleashed.exceptions as ex
 import xml.etree.ElementTree as eTree
 import copy
 
 
-class Outline:
+class OldOutline:
     def __init__(self, outline):
         """
         Outline is a representation of an object which is derived from OPML, an XML markup language.
@@ -56,7 +56,7 @@ class Outline:
         """
 
         if start_node is None:
-            outline_node = OutlineNode(self.root)
+            outline_node = OldOutlineNode(self.root)
         else:
             outline_node = start_node
 
@@ -97,14 +97,14 @@ class Outline:
     @classmethod
     def from_opml(cls, opml_path):
         outline = eTree.parse(opml_path)
-        top_outline, head = Outline.initialise_opml_tree(outline)
+        top_outline, head = OldOutline.initialise_opml_tree(outline)
 
         return cls(top_outline)
 
     @classmethod
     def from_etree(cls, e_tree):
         outline = e_tree
-        top_outline, head = Outline.initialise_opml_tree(outline)
+        top_outline, head = OldOutline.initialise_opml_tree(outline)
 
         return cls(top_outline)
 
@@ -116,7 +116,7 @@ class Outline:
         Each list in the structure contains, in each element:
         - [0]: The text value of the node:
         - [1]-[n] Sub-lists which represent the child nodes for this node.  Each sub-list has the same structure
-                  as the root node, and so on recursively.
+                  as the _root node, and so on recursively.
         - A leaf-node (node with no children) is represented by a list with just the node value and no other elements.
         - An empty list will be interpreted as a non-existent element (shouldn't really be there).
 
@@ -137,14 +137,14 @@ class Outline:
 
     @staticmethod
     def initialise_opml_tree(tree):
-        # Takes a full tree extracted from an OPML file and extracts head and places all the outline elements from
+        # Takes a full tree extracted from an OPML file and extracts _head and places all the outline elements from
         # the body under an outline element (this ensures that all nodes in the tree are outline elements and makes
         # for easier processing).
 
         root = tree.getroot()
 
         should_be_body = root.findall('body')
-        body = Outline.validate_matched_node(should_be_body)
+        body = OldOutline.validate_matched_node(should_be_body)
         if body is None:
             top_outline = eTree.Element('outline')
         else:
@@ -153,8 +153,8 @@ class Outline:
         for outline in body:
             top_outline.append(outline)
 
-        should_be_head = root.findall('head')
-        if len(should_be_head) == 1 and should_be_head[0].tag == 'head':
+        should_be_head = root.findall('_head')
+        if len(should_be_head) == 1 and should_be_head[0].tag == '_head':
             head = should_be_head[0]
         else:
             head = None
@@ -184,7 +184,7 @@ class Outline:
 
         The ancestry takes the  form of a tuple of tuples where:
 
-        - The sequence of each sub-tuple represents a generation from the root.  So as you follow the sub-tuples from
+        - The sequence of each sub-tuple represents a generation from the _root.  So as you follow the sub-tuples from
           left to right, each one represents a child of the previous one.  So the tuples will be arranged something
           like:
 

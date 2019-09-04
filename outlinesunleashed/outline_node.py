@@ -1,7 +1,7 @@
 import outlinesunleashed.exceptions as ex
 
 
-class OutlineNode:
+class OldOutlineNode:
     """
     Wrapper class for node in an xml tree of an outline. Makes for easier handling of nodes and encapsulates some
     common functionality like get at text and notes fields.
@@ -46,8 +46,8 @@ class OutlineNode:
         # need to check whether the attributes are present in the attrib dict property as we
         # deal with missing attributes within get_attribute() robustly.
 
-        mandatory_properties = list(filter(lambda x: OutlineNode.expected_properties[x] is True,
-                                          OutlineNode.expected_properties.keys()))
+        mandatory_properties = list(filter(lambda x: OldOutlineNode.expected_properties[x] is True,
+                                           OldOutlineNode.expected_properties.keys()))
         missing_properties = list(filter(lambda x: not hasattr(node, x), mandatory_properties))
         if len(missing_properties) > 0:
             missing_property_list_string = ', '.join(missing_properties)
@@ -71,16 +71,16 @@ class OutlineNode:
         return 'text: "{}", note: "{}"'.format(text_display_string, note_display_string)
 
     def __getitem__(self, item):
-        return OutlineNode(self._node[item])
+        return OldOutlineNode(self._node[item])
 
     def __len__(self):
         return len(self._node)
 
     def _get_attribute(self, attribute_name):
-        if attribute_name not in OutlineNode.expected_attributes:
+        if attribute_name not in OldOutlineNode.expected_attributes:
             raise ValueError('get_attribute called for non-expected attribute {}'.format(attribute_name))
 
-        mandatory, default = OutlineNode.expected_attributes[attribute_name]
+        mandatory, default = OldOutlineNode.expected_attributes[attribute_name]
         if attribute_name not in self._node.attrib or self._node.attrib[attribute_name] is None:
             if mandatory is True:
                 raise ex.MalformedOutline('No {} field for node {}'.format(attribute_name, self._node))
@@ -94,8 +94,8 @@ class OutlineNode:
         # Remove leading and trailing whitespace and line breaks
         string_stripped = long_string.strip().replace('\n', ' ').replace('\r', '')
 
-        is_truncated = True if len(string_stripped) > OutlineNode.max_len_for_short else False
-        length = min(len(string_stripped), OutlineNode.max_len_for_short)
+        is_truncated = True if len(string_stripped) > OldOutlineNode.max_len_for_short else False
+        length = min(len(string_stripped), OldOutlineNode.max_len_for_short)
 
         ellipsis = '...' if is_truncated else ''
         display_string = string_stripped[:length]

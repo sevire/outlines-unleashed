@@ -29,6 +29,15 @@ def outline_identity(text):
     # If there is no parsing to do just return the value un-transformed.
     return text
 
+def outline_int(text):
+    """
+    parses text value from outline to an int value.
+
+    :param text:
+    :return:
+    """
+    return int(text)
+
 
 def outline_list(text):
     """
@@ -41,38 +50,38 @@ def outline_list(text):
     data_list = text.split(",")
 
     # Remove any whitespace
-    clean_list = map(lambda x: x.strip(), data_list)
+    clean_list = list(map(lambda x: x.strip(), data_list))
 
     return clean_list
 
 
 # Help make specification of a particular attribute or element more readable by using named_tuple.
-NodeElementSpecifier = namedtuple('NodeElementSpecifier', 'required default value_parser')
+NodeFieldSpecifier = namedtuple('NodeFieldSpecifier', 'required default value_parser')
 
 outline_node_structures = {
     'opml': {
-        'attributes': {'version': NodeElementSpecifier(required=True, default=None, value_parser=outline_identity)},
+        'attributes': {'version': NodeFieldSpecifier(required=True, default=None, value_parser=outline_identity)},
         'child_elements': {
-            'head': NodeElementSpecifier(required=True, default=None, value_parser=None),
-            'body': NodeElementSpecifier(required=True, default=None, value_parser=None)
+            'head': NodeFieldSpecifier(required=True, default=None, value_parser=None),
+            'body': NodeFieldSpecifier(required=True, default=None, value_parser=None)
         }
     },
     'head': {
         'attributes': {},
         'child_elements': {
-            'title':           NodeElementSpecifier(required=False, default='', value_parser=None),
-            'dateCreated':     NodeElementSpecifier(required=False, default=None, value_parser=outline_identity),
-            'dateModified':    NodeElementSpecifier(required=False, default=None, value_parser=outline_identity),
-            'ownerName':       NodeElementSpecifier(required=False, default=None, value_parser=outline_identity),
-            'ownerEmail':      NodeElementSpecifier(required=False, default=None, value_parser=outline_identity),
-            'ownerId':         NodeElementSpecifier(required=False, default=None, value_parser=outline_identity),
-            'docs':            NodeElementSpecifier(required=False, default=None, value_parser=outline_identity),
-            'expansionState':  NodeElementSpecifier(required=False, default=None, value_parser=outline_list),
-            'vertScrollState': NodeElementSpecifier(required=False, default=None, value_parser=outline_identity),
-            'windowTop':       NodeElementSpecifier(required=False, default=None, value_parser=outline_identity),
-            'windowLeft':      NodeElementSpecifier(required=False, default=None, value_parser=outline_identity),
-            'windowBottom':    NodeElementSpecifier(required=False, default=None, value_parser=outline_identity),
-            'windowRight':     NodeElementSpecifier(required=False, default=None, value_parser=outline_identity),
+            'title':           NodeFieldSpecifier(required=False, default='', value_parser=outline_identity),
+            'dateCreated':     NodeFieldSpecifier(required=False, default=None, value_parser=outline_identity),
+            'dateModified':    NodeFieldSpecifier(required=False, default=None, value_parser=outline_identity),
+            'ownerName':       NodeFieldSpecifier(required=False, default=None, value_parser=outline_identity),
+            'ownerEmail':      NodeFieldSpecifier(required=False, default=None, value_parser=outline_identity),
+            'ownerId':         NodeFieldSpecifier(required=False, default=None, value_parser=outline_identity),
+            'docs':            NodeFieldSpecifier(required=False, default=None, value_parser=outline_identity),
+            'expansionState':  NodeFieldSpecifier(required=False, default=None, value_parser=outline_list),
+            'vertScrollState': NodeFieldSpecifier(required=False, default=None, value_parser=outline_int),
+            'windowTop':       NodeFieldSpecifier(required=False, default=None, value_parser=outline_int),
+            'windowLeft':      NodeFieldSpecifier(required=False, default=None, value_parser=outline_int),
+            'windowBottom':    NodeFieldSpecifier(required=False, default=None, value_parser=outline_int),
+            'windowRight':     NodeFieldSpecifier(required=False, default=None, value_parser=outline_int),
         }
     },
     'body': {
@@ -81,8 +90,8 @@ outline_node_structures = {
     },
     'outline': {
         'attributes': {
-            '_note': NodeElementSpecifier(required=False, default='', value_parser=outline_identity),
-            'text': NodeElementSpecifier(required=True, default=None, value_parser=outline_identity)
+            '_note': NodeFieldSpecifier(required=False, default='', value_parser=outline_identity),
+            'text': NodeFieldSpecifier(required=True, default=None, value_parser=outline_identity)
         },
         'child_elements': {'outline'}
     },
