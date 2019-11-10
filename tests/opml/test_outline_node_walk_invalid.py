@@ -14,9 +14,11 @@ class TestOutlineNodeWalkInvalid(TestCase):
           # 'opml-test-invalid-05.opml', (It's not an error to have additional attributes according to OPML spec)
           'opml-test-invalid-06.opml')
     def test_invalid_node_01(self, filename):
-        """
-        Tests that if there is a node which is invalid it generates and exception and aborts the walk.
-        :return:
+        """Tests that if there is a node which is invalid it generates and
+        exception and aborts the walk. :return:
+
+        Args:
+            filename:
         """
 
         outline = Outline.from_opml(os.path.join(tcfg.test_resources_root, filename))

@@ -1,6 +1,14 @@
+import copy
+import re
+from typing import Tuple
+
 from opml import outline_utilities as outil
 from xml.etree.ElementTree import Element
-from opml.opml_exceptions import MalformedOutline
+
+from opml.node_ancestry_item import NodeAncestryItem
+from opml.node_ancestry_record import NodeAncestryRecord
+from opml.opml_exceptions import MalformedOutline, MalformedTagRegex
+from outlines_unleashed.tag_field_descriptor import TagFieldDescriptor
 
 
 class OutlineNode:
@@ -22,23 +30,32 @@ class OutlineNode:
     """
     max_len_for_short = 15
 
-    def __init__(self, outline_node: Element):
+    def __init__(self,
+                 outline_node: Element,
+                 tag_regex_text: Tuple[str, str] = None,
+                 tag_regex_note: Tuple[str, str] = None
+                 ):
         """
         Do some checking that we have been passed in the right type of object (should be an xml.etree.Element
         object with tag of outline and a few other things.
 
         Everything else is done through methods which expose the properties to the user from the node.
 
-        :param outline_node:
+        :param outline_node: Element with tag <outline> which the OutlineNode will wrap.
+        :param tag_regex_text: String containing regex to use to parse tag value in text field.
+        :param tag_regex_note: String containing regex to use to parse tag value in note field.
         """
+
         if outil.is_valid_tag(outline_node):
             outil.get_valid_attribute(outline_node, 'text')
             self._node = outline_node
+            self.tag_regex_text = tag_regex_text
+            self.tag_regex_note = tag_regex_note
         else:
-            raise(MalformedOutline(f'Invalid element <{outline_node.tag}> in outline'))
+            raise (MalformedOutline(f'Invalid element <{outline_node.tag}> in outline'))
 
     def __getitem__(self, index):
-        return OutlineNode(self._node[index])
+        return OutlineNode(self._node[index], self.tag_regex_text, self.tag_regex_note)
         # ToDo: Identical <outline> nodes should return identical OutlineNodes (pass the 'is' test)
 
     def __eq__(self, other: Element):
@@ -59,13 +76,38 @@ class OutlineNode:
         """
         return len(self._node)
 
-    def list_all_nodes(self, ancestry=None):
-        local_ancestry = [] if ancestry is None else ancestry
-        yield (self, tuple(local_ancestry))
+    def list_all_nodes(self, ancestry: NodeAncestryRecord = None):
+        """
+        Recursive generator which traverses the outline node tree in document order (depth first) and returns, for
+        each node, a NodeAncestryRecord object which includes a reference to the node, and a tuple representing its
+        child_number_ancestry (ie the list of child_numbers from root to the node, which uniquely determines the node's
+        position in the tree.
+
+        Note that the yield happens at the beginning of the function.  This means that we are yielding what we have
+        been passed, not what we are generating in the function.
+
+        (This took a while for me to get my head round and is important to the understanding of the convoluted nature
+        of the recursion in the generator).
+
+        When the generator reaches the leaf node of a given path, when the for loop is encountered, it will just fall
+        straight through, and return to the last call, having already yielded the value for this call.
+
+        On the first call, there is nothing to be passed in, so the generator creates a first node (bootstrapping
+        itself, so to speak).
+
+        :param ancestry:
+        :return:
+        """
+        if ancestry is None:
+            ancestry_record = NodeAncestryRecord([NodeAncestryItem(None, self)])
+        else:
+            ancestry_record = ancestry
+            #node_ancestry = ancestry_record
+        yield ancestry_record
         for child_number, a_child in enumerate(self):
-            child_ancestry = local_ancestry.copy()
-            child_ancestry.append(child_number+1)
-            yield from a_child.list_all_nodes(child_ancestry)
+            next_gen_ancestry = copy.copy(ancestry_record)
+            next_gen_ancestry.append_node_to_ancestry(NodeAncestryItem(child_number+1, a_child))
+            yield from a_child.list_all_nodes(next_gen_ancestry)
 
     def total_sub_nodes(self):
         count = len(self) + 1
@@ -76,11 +118,14 @@ class OutlineNode:
     @property
     def text(self):
         """
-        Access to the text attribute of an outline node.
+        Access to the text attribute of an outline node. If a tag regex string has been defined then look for a tag
+        and if there is one extract the tag before returning the remainder
 
         :return: The text attribute of self.node
         """
-        return outil.get_valid_attribute(self._node, 'text')
+        field_text = outil.get_valid_attribute(self._node, 'text')
+        text, tag = self._extract_tag_and_text(field_text, self.tag_regex_text)
+        return text
 
     @property
     def note(self):
@@ -89,7 +134,21 @@ class OutlineNode:
 
         :return: The _note attribute of self.node
         """
-        return outil.get_valid_attribute(self._node, '_note')
+        field_text = outil.get_valid_attribute(self._node, '_note')
+        text, tag = self._extract_tag_and_text(field_text, self.tag_regex_note)
+        return text
+
+    @property
+    def text_tag(self):
+        field_text = outil.get_valid_attribute(self._node, 'text')
+        text, tag = self._extract_tag_and_text(field_text, self.tag_regex_text)
+        return tag
+
+    @property
+    def note_tag(self):
+        field_text = outil.get_valid_attribute(self._node, '_note')
+        text, tag = self._extract_tag_and_text(field_text, self.tag_regex_note)
+        return tag
 
     def iter(self):
         return self.list_all_nodes()
@@ -121,7 +180,9 @@ class OutlineNode:
     def __str__(self):
         text_display_string = self._process_string_for_display(self.text)
         note_display_string = self._process_string_for_display(self.note)
-        return 'OutlineNode: children: {}, text: "{}", note: "{}"'.format(len(self), text_display_string, note_display_string)
+        return 'OutlineNode: children: {}, text: "{}", note: "{}"'.format(len(self),
+                                                                          text_display_string,
+                                                                          note_display_string)
 
     def __repr__(self):
         text_display_string = self._process_string_for_display(self.text)
@@ -137,10 +198,45 @@ class OutlineNode:
         is_truncated = True if len(string_stripped) > OutlineNode.max_len_for_short else False
         length = min(len(string_stripped), OutlineNode.max_len_for_short)
 
-        ellipsis = '...' if is_truncated else ''
+        ellipsis_string = '...' if is_truncated else ''
         display_string = string_stripped[:length]
-        return_string = display_string + ellipsis
+        return_string = display_string + ellipsis_string
 
         return return_string
 
+    @staticmethod
+    def _extract_tag_and_text(text: str, regex_delim: Tuple[str, str]):
+        if regex_delim is None:
+            return text, None
+        else:
+            tag_field_desciptor = TagFieldDescriptor(regex_delim)
 
+            return tag_field_desciptor.parse_tag(text)
+
+    @property
+    def short_text(self):
+        return self._process_string_for_display(self.text)
+
+    @property
+    def short_note(self):
+        return self._process_string_for_display(self.note)
+
+    def match_data_node(self, field_specifications):
+        match_list = []
+        for node_list_entry in self.list_all_nodes():
+            for field_name in field_specifications:
+                field_specification = field_specifications[field_name]
+                if self.match_field(node_list_entry, field_specification['ancestry_matching_criteria']):
+                    match_list.append((field_name, node_list_entry))  # Temporary while developing and testing.
+        return match_list
+
+    def match_field(self, node_list_entry, field_ancestry_criteria):
+        # First check whether depths match.  If not then definitely not a match.
+        if node_list_entry.depth != len(field_ancestry_criteria):
+            return False
+        else:
+            match = True
+            for matching_criterion in field_ancestry_criteria:
+                if not matching_criterion.matches_criteria(node_list_entry):
+                    match = False
+        return match

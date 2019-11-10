@@ -27,25 +27,28 @@ from collections import namedtuple
 # Define functions to use to decode value of elements (these will be shared by elements which contain the same type
 def outline_identity(text):
     # If there is no parsing to do just return the value un-transformed.
+    """
+    Args:
+        text:
+    """
     return text
 
 def outline_int(text):
-    """
-    parses text value from outline to an int value.
+    """parses text value from outline to an int value.
 
-    :param text:
-    :return:
+    Args:
+        text:
     """
     return int(text)
 
 
 def outline_list(text):
-    """
-    Created to deal with the case of the expansion_state element but will work for any element where the data is
-    represented as a comma separated list.
+    """Created to deal with the case of the expansion_state element but will
+    work for any element where the data is represented as a comma separated
+    list.
 
-    :param text:
-    :return:
+    Args:
+        text:
     """
     data_list = text.split(",")
 

@@ -1,4 +1,6 @@
 import copy
+from typing import Tuple
+
 import opml.opml_exceptions as ex
 from xml.etree import ElementTree
 from opml import outline_utilities as outil
@@ -38,7 +40,8 @@ class Outline:
 
         This may change if I decide to implement outline editing and writing, but that's not for now.
     """
-    def __init__(self, outline, head, root, full_validate=False):
+    def __init__(self, outline, head, root, full_validate=False,
+                 tag_regex_delim_text: Tuple[str, str] = None, tag_regex_delim_note: Tuple[str, str] = None):
         """
         :param outline: An outline object from one of the factory methods implementing supported formats.  In the form
                         of an ElementTree object.
@@ -51,7 +54,10 @@ class Outline:
         self._root = root
         self._head = head
 
-        self.outline = OutlineNode(outline)
+        self.tag_regex_text = tag_regex_delim_text
+        self.tag_regex_note = tag_regex_delim_note
+
+        self.outline = OutlineNode(outline, self.tag_regex_text, self.tag_regex_note)
 
         self.version = outil.get_valid_attribute(self._root, 'version')
         self.title = outil.get_valid_element_value(self._head, 'title')
@@ -108,10 +114,15 @@ class Outline:
             return top_outline, head, root
 
     @classmethod
-    def from_opml(cls, opml_path: str):
+    def from_opml(
+            cls,
+            opml_path: str,
+            tag_text_delimiter: Tuple[str, str] = None,
+            tag_note_delimiter: Tuple[str, str] = None
+    ):
         outline = ElementTree.parse(opml_path)
 
-        return cls(*Outline.initialise_opml_tree(outline))
+        return cls(*Outline.initialise_opml_tree(outline), tag_regex_delim_text=tag_text_delimiter, tag_regex_delim_note=tag_note_delimiter)
 
     @classmethod
     def from_etree(cls, e_tree):
@@ -127,3 +138,22 @@ class Outline:
 
     def list_all_nodes(self):
         return self.outline.list_all_nodes()
+
+    def match_root_nodes(self, matching_criteria):
+        """
+        Find the nodes within the outline which are flagged as 'unleashed' nodes (that is nodes which contain
+        structured data for processing).
+
+        At the time of writing unleashed nodes will be identified by containing the tag "DATA-OBJECT".  This is
+        for convenience during development and testing and may change later.
+
+        ToDo: Revise/Confirm approach for identifying root nodes.
+
+        Finds all nodes which match the given criteria.  These will be the root nodes of the data objects embedded
+        within the outline, which can then be processed accordingly (e.g. to extract and tabulate the data)
+
+        :param matching_criteria:
+        :return:
+        """
+        return [] # Empty list for now.
+
