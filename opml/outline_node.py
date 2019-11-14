@@ -222,21 +222,100 @@ class OutlineNode:
         return self._process_string_for_display(self.note)
 
     def match_data_node(self, field_specifications):
+        """
+        Treat this node as the root of a data node embedded within a larger outline structure.  Using the
+        field_specifications provided identify all nodes within the data_node sub-tree structure which match
+        the supplied criteria, and extract the information required to fully define each extracted field
+
+        :param field_specifications: A structure which defines the properties of a field to be extracted and
+               also the criteria which define the properties of nodes which map to that field.
+
+        :return: Information required to create a field object for each matched field and construct records
+                 from the fields.
+        """
         match_list = []
-        for node_list_entry in self.list_all_nodes():
-            for field_name in field_specifications:
-                field_specification = field_specifications[field_name]
-                if self.match_field(node_list_entry, field_specification['ancestry_matching_criteria']):
-                    match_list.append((field_name, node_list_entry))  # Temporary while developing and testing.
+        for data_node_list_entry in self.list_all_nodes():
+            matched_field_data = self.match_field_node(data_node_list_entry, field_specifications)
+            if matched_field_data is not None:
+                match_list.append(matched_field_data)
+
         return match_list
 
-    def match_field(self, node_list_entry, field_ancestry_criteria):
+    @staticmethod
+    def match_field_node(field_node_list_entry, field_specifications):
+        """
+        Checks a supplied candidate field node against all the field specifiers to look for a match. If we
+        find a match then return the field value as defined within the field specifier for the matched field.
+
+        :param field_node_list_entry:
+        :param field_specifications:
+        :return:
+        """
+        for field_name in field_specifications:
+            field_specification = field_specifications[field_name]
+            criteria = field_specification['ancestry_matching_criteria']
+
+            if OutlineNode.match_field(field_node_list_entry, criteria):
+                field_value = OutlineNode.extract_field(field_node_list_entry.node(), field_specification)
+                return field_name, field_value
+
+    @staticmethod
+    def match_field(node_ancestry_record, field_ancestry_criteria):
+        """
+        Check whether an outline node (field node) from within a data node sub-tree matches the criteria
+        for a specific field specifier.
+
+        Goes through ancestry of node and tests each generation against the corresponding criteria
+
+        :param node_ancestry_record:
+        :param field_ancestry_criteria:
+        :return:
+        """
         # First check whether depths match.  If not then definitely not a match.
-        if node_list_entry.depth != len(field_ancestry_criteria):
+        if node_ancestry_record.depth != len(field_ancestry_criteria)-1:
             return False
         else:
+            # Depth matches so we now need to test against provided criteria.  Each criterion corresponds to
+            # a generation in the ancestry, so we need to test each generation against the appropriate criterion.
+            # So we walk down the ancestry from root to current generation and check for a match.  As soon as
+            # we fail to get a match, we know the node doesn't match.  If we don't fail at all generations then
+            # we have a match.
             match = True
-            for matching_criterion in field_ancestry_criteria:
-                if not matching_criterion.matches_criteria(node_list_entry):
+
+            # Create list of pairs from depth 1 to depth of node we are testing against.  Note that
+            # a node list entry has ancestry starting at zero to represent the root of the outline, and
+            # criteria need to start there too.
+            paired_gen_and_criteria = zip(node_ancestry_record, field_ancestry_criteria)
+            for pair in paired_gen_and_criteria:
+                generation, gen_criteria = pair
+                if not gen_criteria.matches_criteria(generation):
                     match = False
+
         return match
+
+    @staticmethod
+    def extract_field(field_node, field_criteria):
+        """
+        Extracts the field value from the node according to the field_specifier for the field.  Usually will
+        be called once the field has been matched to confirm it is meets the criteria for a specific field
+        name.
+
+        :param field_node:
+        :param field_criteria:
+        :return:
+        """
+
+        value_specifier = field_criteria['field_value_specifier']
+
+        if value_specifier == 'text_value':
+            field_value = field_node.text
+        elif value_specifier == 'text_tag':
+            field_value = field_node.text_tag
+        elif value_specifier == 'note_value':
+            field_value = field_node.note
+        elif value_specifier == 'note_tag':
+            field_value = field_node.note_tag
+        else:
+            raise ValueError(f"Unrecognised field specifier {value_specifier}")
+
+        return field_value

@@ -1,3 +1,4 @@
+from opml.node_ancestry_item import NodeAncestryItem
 from opml.node_ancestry_record import NodeAncestryRecord
 
 
@@ -28,14 +29,15 @@ class NodeAncestryMatchingCriteria:
         self.text_tag = text_tag
         self.note_tag = note_tag
 
-    def matches_criteria(self, node_list_value: NodeAncestryRecord):
+    def matches_criteria(self, node_list_item: NodeAncestryItem):
         """
-        tests whether a supplied node matches
+        tests whether a specific generation within the ancestry for a node (the node list item) matches
+        with the criteria represented within this object.
 
-        :param node_list_value:
+        :param node_list_item:
         :return:
         """
-        outline_node = node_list_value.node()
+        outline_node = node_list_item.node
 
         # Go through each of the supplied matching criteria and where it isn't None, check whether the supplied
         # node matches on that criterion.  Start by assuming there is a match then look for criteria which negate
@@ -44,7 +46,7 @@ class NodeAncestryMatchingCriteria:
         match = True
         # if self.level is not None and self.level != outline_node.level:
         #     match = False
-        if self.child_number is not None and node_list_value.depth > 0 and self.child_number != node_list_value[-1].child_number:
+        if self.child_number is not None and self.child_number != node_list_item.child_number:
             match = False
         elif self.text is not None and self.text != outline_node.text:
             match = False
