@@ -221,6 +221,33 @@ class OutlineNode:
     def short_note(self):
         return self._process_string_for_display(self.note)
 
+    def extract_data_node(self, data_node_specifier):
+        """
+        Parse the sub_tree with self as a root and extract all the nodes which match the criteria defined
+        in the data_node_specifier.
+
+        Based on how the primary key is defined, assemble records as the tree is parsed.  This is the
+        essence of unleashing outlines, because nodes with a common parent which is a primary key node
+        will share that element of the primary key, and this is how a tree structure is transformed to a
+        table structure with fixed format records.
+
+        The records are created with fields (and types) according to the field definitions within the
+        data_node_specifier, and then added to a list in the order in wihch they appear in the tree.
+
+        This is what is then returned to the caller.
+
+        :param data_node_specifier:
+        :return:
+        """
+        data_node_table = []
+        data_node_record = {}
+        for field in data_node_specifier:
+            data_node_record[field] = ''  # For now everything is a text field
+
+        data_node_table.append(data_node_record)
+
+        return data_node_table
+
     def match_data_node(self, field_specifications):
         """
         Treat this node as the root of a data node embedded within a larger outline structure.  Using the

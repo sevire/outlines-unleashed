@@ -129,6 +129,9 @@ data_node_specifier_test_driver = [
 @ddt
 class TestDataNodeExtract01(TestCase):
     def setUp(self) -> None:
+        data_node_index = 1
+        data_node_descriptor = data_node_specifier_test_driver[0]
+
         tag_delimiters_text = ('[*', '*]')
 
         outline = Outline.from_opml(os.path.join(tcfg.test_resources_root,
@@ -139,14 +142,18 @@ class TestDataNodeExtract01(TestCase):
         # Create list of all nodes (plus ancestry) to allow acess to nodes by index.
         self.node_list = list(outline.list_all_nodes())
 
-    @data(*data_driver_01)
-    @unpack
-    def test_data_node_extract_01(self, data_node_index, data_node_descriptor_index, expected_field_data):
-        test_data_node = self.node_list[data_node_index]
-        extracted_data_table = test_data_node.extract_data_node(
-            test_data_node,
-            data_node_specifier_test_driver[data_node_descriptor_index]
-        )
-        self.assertIsInstance(extracted_data_table, List)
-        self.assertEqual(len(expected_field_data), extracted_data_table)
-        self.assertTrue(False)
+        test_data_node = self.node_list[data_node_index].node()
+        self.extracted_data_table = test_data_node.extract_data_node(data_node_descriptor)
+
+    def test_data_node_extract_properties(self):
+        self.assertIsInstance(self.extracted_data_table, List)
+
+    def test_data_node_number_of_fields(self):
+        test_record = self.extracted_data_table[0]  # Any record will do, but there must be at least one
+        self.assertEqual(4, len(test_record))
+
+    def test_data_node_field_type(self):
+        test_record = self.extracted_data_table[0]  # Any record will do, but there must be at least one
+        for field in test_record:
+            value = test_record[field]
+            self.assertIsInstance(value, str)
