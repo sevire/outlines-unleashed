@@ -102,11 +102,11 @@ class OutlineNode:
             ancestry_record = NodeAncestryRecord([NodeAncestryItem(None, self)])
         else:
             ancestry_record = ancestry
-            #node_ancestry = ancestry_record
+            # node_ancestry = ancestry_record
         yield ancestry_record
         for child_number, a_child in enumerate(self):
             next_gen_ancestry = copy.copy(ancestry_record)
-            next_gen_ancestry.append_node_to_ancestry(NodeAncestryItem(child_number+1, a_child))
+            next_gen_ancestry.append_node_to_ancestry(NodeAncestryItem(child_number + 1, a_child))
             yield from a_child.list_all_nodes(next_gen_ancestry)
 
     def total_sub_nodes(self):
@@ -242,34 +242,58 @@ class OutlineNode:
         match_list = self.match_data_node(data_node_specifier)
         data_node_table = []
         primary_key_field_list = self.extract_field_names(data_node_specifier, primary_key_only=True)
-        non_primary_key_field_list = self.extract_field_names(data_node_specifier, primary_key_only=None)
+        non_primary_key_field_list = self.extract_field_names(data_node_specifier, primary_key_only=False)
+        empty_data_node_record = {key: None for key in primary_key_field_list + non_primary_key_field_list}
+
+        # Initialise record for first row
+        data_node_record = empty_data_node_record
 
         for match in match_list:
-            # Initialise record
-            data_node_record = {key:'' for key in primary_key_field_list}
             field_name, field_value = match
-            for field in data_node_specifier:
-                data_node_record[field] = field_value  # For now everything is a text field
+            if data_node_record[field_name] is None:
+                data_node_record[field_name] = field_value
+            else:
+                # We have already populated this field, so either it's a new primary key value (end of record)
+                # or an error.
+                if field_name in primary_key_field_list:
+                    # This is a new primary key value so the record is complete.
+                    # Check whether any fields un-filled and issue warning but update with default value.
+                    for field_name in data_node_record:
+                        if data_node_record[field_name] is None:
+                            data_node_record[field_name] = '(unfilled)'
 
-            data_node_table.append(data_node_record)
+                    # Append copy of record to output table so don't keep updating same pointer.
+                    data_node_table.append(copy.copy(data_node_record))
+
+                    # Initialise record for next row.  Key fields should be maintained apart from the one which has
+                    # changed. So just initialise non key fields and then update current key field.
+                    data_node_record[field_name] = field_value
+                    for field_name in non_primary_key_field_list:
+                        data_node_record[field_name] = None
+                else:
+                    # New value for non-primary key field.  That's an error (but only a warning to be issued)
+                    # ToDo: Add logging to allow warnings to be issued which don't stop programme.
+                    pass
 
         return data_node_table
 
     @staticmethod
-    def extract_field_names(data_node_specifier, primary_key_only:Optional[bool]=None):
-        def key_field_check(primary_key_filter, primary_key_flag):
-            if primary_key_filter is None:
-                return True
-            elif primary_key_filter is True and primary_key_flag is 'yes':
-                return True
-            elif primary_key_filter is False and primary_key_flag is 'no':
-                return True
-            else:
-                return False
+    def _key_field_check(primary_key_filter, primary_key_flag):
+        if primary_key_filter is None:
+            return True
+        elif primary_key_filter is True and primary_key_flag is 'yes':
+            return True
+        elif primary_key_filter is False and primary_key_flag is 'no':
+            return True
+        else:
+            return False
+
+    @staticmethod
+    def extract_field_names(data_node_specifier, primary_key_only: Optional[bool] = None):
 
         fields = [
             field_name for field_name in data_node_specifier
-            if key_field_check(primary_key_only, data_node_specifier[field_name]['primary_key'])
+            if OutlineNode._key_field_check(primary_key_only, data_node_specifier[field_name]['primary_key'])
         ]
         return fields
 
@@ -324,7 +348,7 @@ class OutlineNode:
         :return:
         """
         # First check whether depths match.  If not then definitely not a match.
-        if node_ancestry_record.depth != len(field_ancestry_criteria)-1:
+        if node_ancestry_record.depth != len(field_ancestry_criteria) - 1:
             return False
         else:
             # Depth matches so we now need to test against provided criteria.  Each criterion corresponds to
