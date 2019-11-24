@@ -60,7 +60,7 @@ node_match_criteria_16 = NodeAncestryMatchingCriteria(text_tag='M')
 data_node_specifier_test_driver = [
     {
         'risk_description': {
-            'primary_key': 'single',  # Values: start, end, single, null
+            'primary_key': 'yes',  # Values: start, end, single, null
             'type': 'string',
             'field_value_specifier': 'text_value',
             'ancestry_matching_criteria': [
@@ -108,7 +108,7 @@ data_node_specifier_test_driver = [
     },
     {
         'risk_description': {
-            'primary_key': 'single',  # Values: start, end, single, null
+            'primary_key': 'yes',  # Values: start, end, single, null
             'type': 'string',
             'field_value_specifier': 'text_value',
             'ancestry_matching_criteria': [

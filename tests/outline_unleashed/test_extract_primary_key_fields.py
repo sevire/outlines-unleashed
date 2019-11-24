@@ -1,12 +1,3 @@
-"""
-Test which invokes extraction of a data node and gets a data structure of the right format back, based
-on the data node provided and the data node descriptor provided.
-
-Calls extract_data_node() method upon the root of a data node sub-tree (OutlineNode) within a parsed
-outline.
-
-Gets in return a List of Dicts where each field in the dict corresponds to the fields in the specifier.
-"""
 from typing import List
 from unittest import TestCase
 
@@ -16,21 +7,12 @@ import tests.test_config as tcfg
 import os
 from ddt import ddt, data, unpack
 
-data_driver_01 = (
-    (1,
-     0,
-     [
-         ('risk_description', 'text'),
-         ('likelihood', 'text'),
-         ('impact', 'text'),
-         ('mitigation', 'text'),
-     ]),
-)
+from opml.outline_node import OutlineNode
 
 data_node_specifier_test_driver = [
     {
         'risk_description': {
-            'primary_key': 'single',  # Values: start, end, single, null
+            'primary_key': 'yes',  # Values: start, end, single, null
             'type': 'string',
             'field_value_specifier': 'text_value',
             'ancestry_matching_criteria': [
@@ -78,7 +60,7 @@ data_node_specifier_test_driver = [
     },
     {
         'risk_description': {
-            'primary_key': 'single',  # Values: start, end, single, null
+            'primary_key': 'yes',  # Values: start, end, single, null
             'type': 'string',
             'field_value_specifier': 'text_value',
             'ancestry_matching_criteria': [
@@ -126,45 +108,37 @@ data_node_specifier_test_driver = [
         },
     }]
 
+
 @ddt
-class TestDataNodeExtract01(TestCase):
-    def setUp(self) -> None:
-        data_node_index = 1
-        data_node_descriptor = data_node_specifier_test_driver[0]
+class TestExtractFieldNames(TestCase):
+    def test_extract_primary_key_field_names(self):
+        key_field_names = OutlineNode.extract_field_names(data_node_specifier_test_driver[0],
+                                                                      primary_key_only=True)
 
-        tag_delimiters_text = ('[*', '*]')
+        expected_field_names = [
+            'risk_description'
+        ]
+        self.assertEqual(expected_field_names, key_field_names)
 
-        outline = Outline.from_opml(os.path.join(tcfg.test_resources_root,
-                                                 'data_extract_test_file_01.opml'),
-                                    tag_delimiters_text
-                                    )
+    def test_extract_non_primary_key_field_names(self):
+        key_field_names = OutlineNode.extract_field_names(data_node_specifier_test_driver[0],
+                                                                      primary_key_only=False)
 
-        # Create list of all nodes (plus ancestry) to allow acess to nodes by index.
-        self.node_list = list(outline.list_all_nodes())
+        expected_field_names = [
+            'likelihood',
+            'impact',
+            'mitigation'
+        ]
+        self.assertEqual(expected_field_names, key_field_names)
 
-        test_data_node = self.node_list[data_node_index].node()
-        self.extracted_data_table = test_data_node.extract_data_node(data_node_descriptor)
+    def test_extract_all_field_names(self):
+        key_field_names = OutlineNode.extract_field_names(data_node_specifier_test_driver[0],
+                                                                      primary_key_only=None)
 
-    def test_data_node_extract_properties(self):
-        self.assertIsInstance(self.extracted_data_table, List)
-
-    def test_data_node_number_of_fields(self):
-        test_record = self.extracted_data_table[0]  # Any record will do, but there must be at least one
-        self.assertEqual(4, len(test_record))
-
-    def test_data_node_field_type(self):
-        test_record = self.extracted_data_table[0]  # Any record will do, but there must be at least one
-        for field in test_record:
-            value = test_record[field]
-            self.assertIsInstance(value, str)
-
-    def test_data_node_first_record(self):
-        test_record = self.extracted_data_table[0]
-
-        expected_record = {
-            'risk_description': 'There is a possibility that the world might end',
-            'likelihood': 'Low',
-            'impact': 'Very High',
-            'mitigation': 'Pray every day'
-        }
-        self.assertEqual(expected_record, test_record)
+        expected_field_names = [
+            'risk_description',
+            'likelihood',
+            'impact',
+            'mitigation'
+        ]
+        self.assertEqual(expected_field_names, key_field_names)

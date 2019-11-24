@@ -1,6 +1,6 @@
 import copy
 import re
-from typing import Tuple
+from typing import Tuple, Optional
 
 from opml import outline_utilities as outil
 from xml.etree.ElementTree import Element
@@ -239,14 +239,39 @@ class OutlineNode:
         :param data_node_specifier:
         :return:
         """
+        match_list = self.match_data_node(data_node_specifier)
         data_node_table = []
-        data_node_record = {}
-        for field in data_node_specifier:
-            data_node_record[field] = ''  # For now everything is a text field
+        primary_key_field_list = self.extract_field_names(data_node_specifier, primary_key_only=True)
+        non_primary_key_field_list = self.extract_field_names(data_node_specifier, primary_key_only=None)
 
-        data_node_table.append(data_node_record)
+        for match in match_list:
+            # Initialise record
+            data_node_record = {key:'' for key in primary_key_field_list}
+            field_name, field_value = match
+            for field in data_node_specifier:
+                data_node_record[field] = field_value  # For now everything is a text field
+
+            data_node_table.append(data_node_record)
 
         return data_node_table
+
+    @staticmethod
+    def extract_field_names(data_node_specifier, primary_key_only:Optional[bool]=None):
+        def key_field_check(primary_key_filter, primary_key_flag):
+            if primary_key_filter is None:
+                return True
+            elif primary_key_filter is True and primary_key_flag is 'yes':
+                return True
+            elif primary_key_filter is False and primary_key_flag is 'no':
+                return True
+            else:
+                return False
+
+        fields = [
+            field_name for field_name in data_node_specifier
+            if key_field_check(primary_key_only, data_node_specifier[field_name]['primary_key'])
+        ]
+        return fields
 
     def match_data_node(self, field_specifications):
         """
