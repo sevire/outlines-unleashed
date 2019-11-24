@@ -30,7 +30,7 @@ data_driver_01 = (
 data_node_specifier_test_driver = [
     {
         'risk_description': {
-            'primary_key': 'single',  # Values: start, end, single, null
+            'primary_key': 'yes',  # Values: start, end, single, null
             'type': 'string',
             'field_value_specifier': 'text_value',
             'ancestry_matching_criteria': [
@@ -78,7 +78,7 @@ data_node_specifier_test_driver = [
     },
     {
         'risk_description': {
-            'primary_key': 'single',  # Values: start, end, single, null
+            'primary_key': 'yes',  # Values: start, end, single, null
             'type': 'string',
             'field_value_specifier': 'text_value',
             'ancestry_matching_criteria': [
@@ -168,3 +168,21 @@ class TestDataNodeExtract01(TestCase):
             'mitigation': 'Pray every day'
         }
         self.assertEqual(expected_record, test_record)
+
+    def test_data_node_number_of_records(self):
+        self.assertEqual(3, len(self.extracted_data_table))
+
+    @data(
+        (0, 'There is a possibility that the world might end', 'Low', 'Very High', 'Pray every day'),
+        (1, 'It may take too long to build and we don\'t have anything in the meantime', 'High', 'High', '(unfilled)'),
+        (2, 'It may be too expensive to build', 'High', 'Medium', '(unfilled)')
+    )
+    @unpack
+    def test_data_node_values(self, record_number, description, likelihood, impact, mitigation):
+
+        self.assertTrue(len(self.extracted_data_table) >= record_number + 1, 'More test records than data records')
+        test_record = self.extracted_data_table[record_number]
+        self.assertEqual(description, test_record['risk_description'])
+        self.assertEqual(likelihood, test_record['likelihood'])
+        self.assertEqual(impact, test_record['impact'])
+        self.assertEqual(mitigation, test_record['mitigation'])

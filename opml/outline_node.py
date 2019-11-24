@@ -258,22 +258,33 @@ class OutlineNode:
                 if field_name in primary_key_field_list:
                     # This is a new primary key value so the record is complete.
                     # Check whether any fields un-filled and issue warning but update with default value.
-                    for field_name in data_node_record:
-                        if data_node_record[field_name] is None:
-                            data_node_record[field_name] = '(unfilled)'
+                    for field in data_node_record:
+                        if data_node_record[field] is None:
+                            data_node_record[field] = '(unfilled)'
 
                     # Append copy of record to output table so don't keep updating same pointer.
-                    data_node_table.append(copy.copy(data_node_record))
+                    data_node_table.append(copy.deepcopy(data_node_record))
+
+                    # Now update new primary key field as part of next record.
+                    data_node_record[field_name] = field_value
+
+
 
                     # Initialise record for next row.  Key fields should be maintained apart from the one which has
                     # changed. So just initialise non key fields and then update current key field.
-                    data_node_record[field_name] = field_value
                     for field_name in non_primary_key_field_list:
                         data_node_record[field_name] = None
                 else:
                     # New value for non-primary key field.  That's an error (but only a warning to be issued)
                     # ToDo: Add logging to allow warnings to be issued which don't stop programme.
                     pass
+
+        # All data fields have been processed, so just clean up the final record and add to the list.
+        for field_name in data_node_record:
+            if data_node_record[field_name] is None:
+                data_node_record[field_name] = '(unfilled)'
+
+        data_node_table.append(copy.copy(data_node_record))
 
         return data_node_table
 
