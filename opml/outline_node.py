@@ -268,8 +268,6 @@ class OutlineNode:
                     # Now update new primary key field as part of next record.
                     data_node_record[field_name] = field_value
 
-
-
                     # Initialise record for next row.  Key fields should be maintained apart from the one which has
                     # changed. So just initialise non key fields and then update current key field.
                     for field_name in non_primary_key_field_list:
