@@ -231,6 +231,12 @@ class OutlineNode:
         will share that element of the primary key, and this is how a tree structure is transformed to a
         table structure with fixed format records.
 
+        Note: At this point we are only dealing with cases where all the key fields are closer
+        to the root of the data node and all the data fields are deeper.  We don't deal with key fields
+        being defined deeper than a non-key field.  I think this is almost certainly right and I haven't
+        thought of any meaningful use cases yet where this may not be true, but there may be some. For now
+        the logic depends upon this.
+
         The records are created with fields (and types) according to the field definitions within the
         data_node_specifier, and then added to a list in the order in wihch they appear in the tree.
 
@@ -256,7 +262,15 @@ class OutlineNode:
                 # We have already populated this field, so either it's a new primary key value (end of record)
                 # or an error.
                 if field_name in primary_key_field_list:
-                    # This is a new primary key value so the record is complete.
+                    # A primary key field is about to be overwritten.
+                    # There are a few cases to process here:
+                    # - Current record must be complete now so can be written (all cases I think)
+                    # - If this is not the last primary key field of the set then we have effectively
+                    #   moved to a new branch and so we need to blank out any key fields in the data record
+                    #   we are constructing as well as all non-key fields
+                    # - Any fields which aren't populated will trigger a warning and an appropriate
+                    #   default value assigned.
+
                     # Check whether any fields un-filled and issue warning but update with default value.
                     for field in data_node_record:
                         if data_node_record[field] is None:
@@ -267,6 +281,19 @@ class OutlineNode:
 
                     # Now update new primary key field as part of next record.
                     data_node_record[field_name] = field_value
+
+                    # If this field isn't the last key field in the primary key, then blank out deeper
+                    # elements within the current data node record as it doesn't apply to the new branch.
+                    key_index = [index for index, value in enumerate(primary_key_field_list) if value == field_name]
+
+                    assert(len(key_index) == 1)
+                    if key_index[0] < len(primary_key_field_list) - 1:
+                        # Key field which isn't last one has changed so need to blank out deeper key
+                        # values in the data node record as they should be re-filled from next branch
+                        # of node tree.
+
+                        for index in range(key_index[0]+1, len(primary_key_field_list)):
+                            data_node_record[primary_key_field_list[index]] = None
 
                     # Initialise record for next row.  Key fields should be maintained apart from the one which has
                     # changed. So just initialise non key fields and then update current key field.

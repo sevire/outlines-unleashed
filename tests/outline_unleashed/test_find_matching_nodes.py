@@ -206,7 +206,7 @@ class TestFindMatchingNodes(TestCase):
         tag_delimiters_text = ('[*', '*]')
 
         outline = Outline.from_opml(os.path.join(tcfg.test_resources_root,
-                                    'data_extract_test_file_01.opml'),
+                                    'opml_data_extraction_test_01.opml'),
                                     tag_delimiters_text
                                     )
 
