@@ -7,17 +7,17 @@ class NodeMatchCriteria:
                  text_tag_value=None,
                  note_tag_value=None
                  ):
-        """
-        Represents the criteria to apply at a specific generation (level)
+        """Represents the criteria to apply at a specific generation (level)
         when trying to locate nodes to extract as part of the parsing of an
         outline to unleash.
 
-        :param level:
-        :param child_number:
-        :param text_value:
-        :param note_value:
-        :param text_tag_value:
-        :param note_tag_value:
+        Args:
+            level:
+            child_number:
+            text_value:
+            note_value:
+            text_tag_value:
+            note_tag_value:
         """
         self.level = level
         self.child_number = child_number

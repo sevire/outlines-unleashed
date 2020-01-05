@@ -6,7 +6,7 @@
     </editor> -->
     <title>opml_data_extraction_test_01</title>
     <dateCreated>Sun, 24 Nov 2019 16:51:06 GMT</dateCreated>
-    <expansionState>1,2,6,12,13,17,24,26,30,31,32,33,34,36,37,38</expansionState>
+    <expansionState>0,1,2,6,12,13,17,24,26,30,31,32,36,40,41,45,46,55</expansionState>
     <vertScrollState>0</vertScrollState>
     <windowTop>192</windowTop>
     <windowLeft>10</windowLeft>
@@ -56,20 +56,43 @@
     <outline text="Data Node 2: Non Key Data">
       <outline text="Key 1: Value 1">
         <outline text="Key 2: Value 2">
-          <outline text="Key 3: Value 3">
-            <outline text="Non-key 1: Value 4">
-              <outline text="Non-key 2: Value 5"/>
-            </outline>
-          </outline>
+          <outline text="Non-key 1: Value 3"/>
+          <outline text="Non-key 2: Value 4"/>
+          <outline text="Non-key 3: Value 5"/>
+        </outline>
+        <outline text="Key 2: Value 11">
+          <outline text="Non-key 1: Value 12"/>
+          <outline text="Non-key 2: Value 13"/>
+          <outline text="Non-key 3: Value 14"/>
         </outline>
       </outline>
       <outline text="Key 1: Value 6">
         <outline text="Key 2: Value 7">
-          <outline text="Key 3: Value 8">
-            <outline text="Non-key 1: Value 9"/>
-            <outline text="Non-key 1: Value 10 (Orphan - won’t end up as part of data table)"/>
-          </outline>
+          <outline text="Non-key 1: Value 8"/>
+          <outline text="Non-key 2: Value 9"/>
+          <outline text="Non-key 3: Value 10"/>
         </outline>
+      </outline>
+    </outline>
+    <outline text="Data Node 3: Meeting Notes" _note="Challenges:&#10;- Use of tags where there is no left hand delimiter (just the beginning of the line).  This will make using tags a lot more straightforward as all the user needs to do is type the tag name (e.g. Person) and a colon, and then get on with the data.&#10;- Two different fields at the same level, with different critieria.  This should be fine as long as the criteria are mutually exclusive so there is no risk of mistaking a node for the wrong field.  But in this case they aren’t - one set of criteria is a subset of the other so the matching algorithm will not guarantee matching the right field.  I think it will work if the criteria are checked in a order of definition and we put the more specific ones first.&#10;&#10;It Fucking Worked first time!!">
+      <outline text="Topic 1">
+        <outline text="Person: Person Name 1"/>
+        <outline text="Note 1"/>
+        <outline text="Note 2"/>
+        <outline text="Note 3"/>
+        <outline text="Person: Person Name 2"/>
+        <outline text="Note 4"/>
+        <outline text="Note 5"/>
+        <outline text="Note 6"/>
+      </outline>
+      <outline text="Topic 2">
+        <outline text="Person: Person Name 1"/>
+        <outline text="Note 7"/>
+        <outline text="Note 8"/>
+        <outline text="Note 9"/>
+        <outline text="Person: Person Name 1"/>
+        <outline text="Note 10"/>
+        <outline text="Note 11"/>
       </outline>
     </outline>
   </body>

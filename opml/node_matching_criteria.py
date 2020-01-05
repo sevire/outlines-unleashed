@@ -3,24 +3,29 @@ from opml.node_ancestry_record import NodeAncestryRecord
 
 
 class NodeAncestryMatchingCriteria:
-    """
-    Used to identify the nodes in the outline which match a given set of criteria, so that node can be used as
-    an extracted field for further processing or output.
+    """Used to identify the nodes in the outline which match a given set of
+    criteria, so that node can be used as an extracted field for further
+    processing or output.
 
-    Stores a set of criteria against which a given node can be matched, and the method to determine whether a
-    supplied outline node matches it.
+    Stores a set of criteria against which a given node can be matched, and
+    the method to determine whether a supplied outline node matches it.
 
-    Where one of the supplied criterion is None this is a wild card which means don't test this value - always
-    match that criterion.
+    Where one of the supplied criterion is None this is a wild card which
+    means don't test this value - always match that criterion.
     """
     def __init__(self, child_number=None, text=None, note=None, text_tag=None, note_tag=None):
         """
         Args:
-            child_number: The sequence number of this child within all the children of the parent node.
-            text: The value of the text attribute to match with (after separating out the tag_text value).
-            note: The value of the note attribute to match with (after separating out the tag_note value).
-            text_tag: The value of the text_tag, embedded within the node text value, to match with.
-            note_tag: The value of the note_tag, embedded within the node note value, to match with.
+            child_number: The sequence number of this child within all the
+                children of the parent node.
+            text: The value of the text attribute to match with (after
+                separating out the tag_text value).
+            note: The value of the note attribute to match with (after
+                separating out the tag_note value).
+            text_tag: The value of the text_tag, embedded within the node text
+                value, to match with.
+            note_tag: The value of the note_tag, embedded within the node note
+                value, to match with.
         """
         #self.level = level
         self.child_number = child_number
@@ -30,12 +35,12 @@ class NodeAncestryMatchingCriteria:
         self.note_tag = note_tag
 
     def matches_criteria(self, node_list_item: NodeAncestryItem):
-        """
-        tests whether a specific generation within the ancestry for a node (the node list item) matches
-        with the criteria represented within this object.
+        """tests whether a specific generation within the ancestry for a node
+        (the node list item) matches with the criteria represented within this
+        object.
 
-        :param node_list_item:
-        :return:
+        Args:
+            node_list_item (NodeAncestryItem):
         """
         outline_node = node_list_item.node
 

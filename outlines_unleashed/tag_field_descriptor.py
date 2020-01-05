@@ -25,8 +25,7 @@ class TagFieldDescriptor:
 
         """
         Args:
-            left_delim:
-            right_delim:
+            regex_delimiter:
         """
         left_delim, right_delim = regex_delimiter
         self.left_delim = escape_regex_match(left_delim)

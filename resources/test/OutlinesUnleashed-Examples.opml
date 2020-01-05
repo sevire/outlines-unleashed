@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="2.0">
+  <head><!-- <editor scale-mac="1.1">
+      <sidebar width="185"/>
+      <column name="text" width="1086"/>
+    </editor> -->
+    <title>OutlinesUnleashed-Examples</title>
+    <dateCreated>Tue, 26 Nov 2019 11:42:09 GMT</dateCreated>
+    <expansionState>0,9</expansionState>
+    <vertScrollState>0</vertScrollState>
+    <windowTop>8</windowTop>
+    <windowLeft>92</windowLeft>
+    <windowRight>1201</windowRight>
+    <windowBottom>557</windowBottom>
+  </head>
+  <body>
+    <outline text="To Do List 1">
+      <outline text="Category: Category 1"/>
+      <outline text="Item: To do list item 1"/>
+      <outline text="Item: To do list item 2"/>
+      <outline text="Date: date 1"/>
+      <outline text="Date: date 2"/>
+      <outline text="Category: Category 2"/>
+      <outline text="Item: To do list item 3"/>
+      <outline text="Item: To do list item 4"/>
+    </outline>
+    <outline text="To Do List 2">
+      <outline text="Category: Category 1" _note="This is the item, but it’s actually just another field within the node with the category in it.  I don’t think I deal with this case at the moment.  I need to be able to&#10;write criteria which match a node and then extract different fields within the node to map to different data fields.&#10;&#10;On reflection, I think all I need to do is, when checking for match for each node against each data field definition, once I have found a match, don’t stop looking."/>
+    </outline>
+  </body>
+</opml>

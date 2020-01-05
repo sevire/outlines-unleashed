@@ -180,6 +180,14 @@ class TestDataNodeExtract01(TestCase):
     @unpack
     def test_data_node_values(self, record_number, description, likelihood, impact, mitigation):
 
+        """
+        Args:
+            record_number:
+            description:
+            likelihood:
+            impact:
+            mitigation:
+        """
         self.assertTrue(len(self.extracted_data_table) >= record_number + 1, 'More test records than data records')
         test_record = self.extracted_data_table[record_number]
         self.assertEqual(description, test_record['risk_description'])

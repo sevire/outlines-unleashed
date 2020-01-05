@@ -4,21 +4,23 @@ from opml.node_ancestry_item import NodeAncestryItem
 
 
 class NodeAncestryRecord:
-    """
-    Stores the sequence of nodes from root node to get to current node, along with the child number of this node.
+    """Stores the sequence of nodes from root node to get to current node, along
+    with the child number of this node.
 
-    This will allow sophisticated matching criteria which specify any property of a node within the ancestry as a
-    match criteria.  So it will be possible to say...
+    This will allow sophisticated matching criteria which specify any
+    property of a node within the ancestry as a match criteria. So it will be
+    possible to say...
 
-        'Find all the nodes which have a text value of 'XXX' at level 2 and a tag of "YYY" in the node itself.'
-
+        'Find all the nodes which have a text value of 'XXX' at level 2 and a
+        tag of "YYY" in the node itself.'
     """
     def __init__(self, node_ancestry: List):
-        """
-        Stores
+        """Stores
 
-        :param node_ancestry: List of NodeAncestryItems each of which include the child_number of the node at that
-                              generation, and the node itself.
+        Args:
+            node_ancestry (List): List of NodeAncestryItems each of which
+                include the child_number of the node at that generation, and the
+                node itself.
         """
         self.node_ancestry = node_ancestry
 
@@ -30,6 +32,10 @@ class NodeAncestryRecord:
         return len(self.node_ancestry)
 
     def __getitem__(self, item):
+        """
+        Args:
+            item:
+        """
         return self.node_ancestry[item]
 
     def __eq__(self, other):
@@ -49,16 +55,15 @@ class NodeAncestryRecord:
                     return False
 
     def __copy__(self):
-        """
-        When creating a list of all nodes in an outline (for example) we need to be able to copy the node_ancestry at
-        one level to pass recursively to the next level in the node tree.  But we don't want to duplicate the
-        ElementTree.Element objects as these determine when two nodes are identical.  So deepcopy won't work.
+        """When creating a list of all nodes in an outline (for example) we need
+        to be able to copy the node_ancestry at one level to pass recursively to
+        the next level in the node tree. But we don't want to duplicate the
+        ElementTree.Element objects as these determine when two nodes are
+        identical. So deepcopy won't work.
 
-        This will create a new NodeAncestry object with a new list of NodeAncestryItems which are references to the
-        same NodeAncestryItems from the source object.
-
-
-        :return:
+        This will create a new NodeAncestry object with a new list of
+        NodeAncestryItems which are references to the same NodeAncestryItems
+        from the source object.
         """
 
         new_node_ancestry_list = []
@@ -67,13 +72,15 @@ class NodeAncestryRecord:
         return NodeAncestryRecord(new_node_ancestry_list)
 
     def append_node_to_ancestry(self, node_ancestry_item):
+        """
+        Args:
+            node_ancestry_item:
+        """
         self.node_ancestry.append(node_ancestry_item)
 
     def node(self):
-        """
-        Extracts the node for which this ancestry is the ancestry of and returns it.
-
-        :return:
+        """Extracts the node for which this ancestry is the ancestry of and
+        returns it.
         """
         if len(self.node_ancestry) == 0:
             return None
