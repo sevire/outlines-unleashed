@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="2.0">
+  <head><!-- <editor>
+      <sidebar width="203"/>
+      <column name="text" width="661"/>
+    </editor> -->
+    <title>FreeFormNotesExample</title>
+    <dateCreated>Wed, 27 Nov 2019 15:56:54 GMT</dateCreated>
+    <expansionState>0</expansionState>
+    <vertScrollState>0</vertScrollState>
+    <windowTop>192</windowTop>
+    <windowLeft>11</windowLeft>
+    <windowRight>693</windowRight>
+    <windowBottom>823</windowBottom>
+  </head>
+  <body>
+    <outline text="Free Format Meeting Notes">
+      <outline text="Topic: Academic Framework"/>
+      <outline text="Who: Jim"/>
+      <outline text="This is a thing."/>
+      <outline text="What do we do next?"/>
+      <outline text="We are all doing very well"/>
+      <outline text="Who: Ruth"/>
+      <outline text="Yes that’s good"/>
+      <outline text="Action:  We need to do something."/>
+      <outline text="Don’t agree with everything"/>
+      <outline text="Topic: BiL"/>
+      <outline text="Who: Thomas"/>
+      <outline text="Everything’s rosey."/>
+      <outline text="Who: Mags"/>
+      <outline text="Ah, but is it?"/>
+    </outline>
+  </body>
+</opml>
