@@ -4,8 +4,8 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup(
-    name='outlines-unleashed-sevire',
-    version='0.0.2',
+    name='outlines-unleashed',
+    version='0.0.3',
     packages=['opml', 'tests', 'tests.opml', 'tests.outline_unleashed', 'resources', 'resources.test',
               'outlines_unleashed'],
     url='https://github.com/sevire/outlines-unleashed',
