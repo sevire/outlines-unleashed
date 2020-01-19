@@ -1,159 +1,12 @@
 from unittest import TestCase
-from opml.node_matching_criteria import NodeAncestryMatchingCriteria
 from opml.outline import Outline
 import os
 import tests.test_config as tcfg
-from ddt import ddt, idata, unpack, data
+from ddt import ddt, unpack, data
 
-test_data_node_specifier_01 = {
-    'section_name': {
-        'primary_key': 'yes',  # Values: start, end, single, null
-        'type': 'string',
-        'field_value_specifier': 'text_value',
-        'ancestry_matching_criteria': [
-            NodeAncestryMatchingCriteria(),
-            NodeAncestryMatchingCriteria(),
-        ]
-    },
-    'slide_name': {
-        'primary_key': 'yes',  # Values: start, end, single, null
-        'type': 'string',
-        'field_value_specifier': 'text_value',
-        'ancestry_matching_criteria': [
-            NodeAncestryMatchingCriteria(),
-            NodeAncestryMatchingCriteria(),
-            NodeAncestryMatchingCriteria(),
-        ]
-    },
-    'bullet': {
-        'primary_key': 'yes',  # Values: start, end, single, null
-        'type': 'string',
-        'field_value_specifier': 'text_value',
-        'ancestry_matching_criteria': [
-            NodeAncestryMatchingCriteria(),
-            NodeAncestryMatchingCriteria(),
-            NodeAncestryMatchingCriteria(),
-            NodeAncestryMatchingCriteria(),
-        ]
-    }
-}
-
-test_data_node_specifier_03x = {
-    'key_field_1': {
-        'primary_key': 'yes',
-        'type': 'string',
-        'field_value_specifier': 'text_value',
-        'ancestry_matching_criteria': [
-            NodeAncestryMatchingCriteria(),
-            NodeAncestryMatchingCriteria(),
-        ]
-    },
-    'key_field_2': {
-        'primary_key': 'yes',
-        'type': 'string',
-        'field_value_specifier': 'text_value',
-        'ancestry_matching_criteria': [
-            NodeAncestryMatchingCriteria(),
-            NodeAncestryMatchingCriteria(),
-            NodeAncestryMatchingCriteria(),
-        ]
-    },
-    'data_field_1': {
-        'primary_key': 'no',
-        'type': 'string',
-        'field_value_specifier': 'text_value',
-        'ancestry_matching_criteria': [
-            NodeAncestryMatchingCriteria(),
-            NodeAncestryMatchingCriteria(),
-            NodeAncestryMatchingCriteria(),
-            NodeAncestryMatchingCriteria(child_number=1),
-        ]
-    },
-    'data_field_2': {
-        'primary_key': 'no',
-        'type': 'string',
-        'field_value_specifier': 'text_value',
-        'ancestry_matching_criteria': [
-            NodeAncestryMatchingCriteria(),
-            NodeAncestryMatchingCriteria(),
-            NodeAncestryMatchingCriteria(),
-            NodeAncestryMatchingCriteria(child_number=2),
-        ]
-    },
-    'data_field_3': {
-        'primary_key': 'no',
-        'type': 'string',
-        'field_value_specifier': 'text_value',
-        'ancestry_matching_criteria': [
-            NodeAncestryMatchingCriteria(),
-            NodeAncestryMatchingCriteria(),
-            NodeAncestryMatchingCriteria(),
-            NodeAncestryMatchingCriteria(child_number=3),
-        ]
-    }
-}
-
-test_data_node_specifier_05x = {
-    'topic': {
-        'primary_key': 'yes',
-        'type': 'string',
-        'field_value_specifier': 'text_value',
-        'ancestry_matching_criteria': [
-            NodeAncestryMatchingCriteria(),
-            NodeAncestryMatchingCriteria()
-        ]
-    },
-    'speaker': {
-        'primary_key': 'yes',
-        'type': 'string',
-        'field_value_specifier': 'text_value',
-        'ancestry_matching_criteria': [
-            NodeAncestryMatchingCriteria(),
-            NodeAncestryMatchingCriteria(),
-            NodeAncestryMatchingCriteria(text_tag='Person'),
-        ]
-    },
-    'note': {
-        'primary_key': 'yes',
-        'type': 'string',
-        'field_value_specifier': 'text_value',
-        'ancestry_matching_criteria': [
-            NodeAncestryMatchingCriteria(),
-            NodeAncestryMatchingCriteria(),
-            NodeAncestryMatchingCriteria(),
-        ]
-    }
-}
-
-test_data_node_specifier_06x = {
-    'category': {
-        'primary_key': 'yes',
-        'type': 'string',
-        'field_value_specifier': 'text_value',
-        'ancestry_matching_criteria': [
-            NodeAncestryMatchingCriteria(),
-            NodeAncestryMatchingCriteria(text_tag='Category')
-        ]
-    },
-    'item': {
-        'primary_key': 'yes',
-        'type': 'string',
-        'field_value_specifier': 'text_value',
-        'ancestry_matching_criteria': [
-            NodeAncestryMatchingCriteria(),
-            NodeAncestryMatchingCriteria(text_tag='Item')
-        ]
-    },
-    'date_due': {
-        'primary_key': 'yes',
-        'type': 'string',
-        'field_value_specifier': 'text_value',
-        'ancestry_matching_criteria': [
-            NodeAncestryMatchingCriteria(),
-            NodeAncestryMatchingCriteria(text_tag='Date')
-        ]
-    },
-}
+from resources.test.test_data_node_specifiers import test_data_node_specifier_ppt_01, test_data_node_specifier_03x, \
+    test_data_node_specifier_05x, test_data_node_specifier_06x, test_data_node_specifier_07, \
+    test_data_node_specifier_freeform_notes
 
 # Potential shorter form data structure to define field specifiers
 xxx = {
@@ -163,65 +16,6 @@ xxx = {
         'field_value_specifier': 'text_value'
     }
 
-}
-test_data_node_specifier_07 = {
-    'category': {
-        'primary_key': 'yes',
-        'type': 'string',
-        'field_value_specifier': 'text_value',
-        'ancestry_matching_criteria': [
-            NodeAncestryMatchingCriteria(),
-            NodeAncestryMatchingCriteria(text_tag='Category')
-        ]
-    },
-    'item': {
-        'primary_key': 'yes',
-        'type': 'string',
-        'field_value_specifier': 'text_value',
-        'ancestry_matching_criteria': [
-            NodeAncestryMatchingCriteria(),
-            NodeAncestryMatchingCriteria(text_tag='Item')
-        ]
-    },
-    'date_due': {
-        'primary_key': 'no',
-        'type': 'string',
-        'field_value_specifier': 'text_value',
-        'ancestry_matching_criteria': [
-            NodeAncestryMatchingCriteria(),
-            NodeAncestryMatchingCriteria(text_tag='Date')
-        ]
-    },
-}
-
-test_data_node_specifier_freeform_notes = {
-    'Topic': {
-        'primary_key': 'yes',
-        'type': 'string',
-        'field_value_specifier': 'text_value',
-        'ancestry_matching_criteria': [
-            NodeAncestryMatchingCriteria(),
-            NodeAncestryMatchingCriteria(text_tag='Topic'),
-        ]
-    },
-    'Speaker': {
-        'primary_key': 'yes',
-        'type': 'string',
-        'field_value_specifier': 'text_value',
-        'ancestry_matching_criteria': [
-            NodeAncestryMatchingCriteria(),
-            NodeAncestryMatchingCriteria(text_tag='Who'),
-        ]
-    },
-    'Note': {
-        'primary_key': 'yes',
-        'type': 'string',
-        'field_value_specifier': 'text_value',
-        'ancestry_matching_criteria': [
-            NodeAncestryMatchingCriteria(),
-            NodeAncestryMatchingCriteria(),
-        ]
-    }
 }
 
 extracted_data_values_01 = (
@@ -289,7 +83,7 @@ class TestDataNodeExtract02(TestCase):
         outline_node_list = list(outline.list_all_nodes())
         data_node = outline_node_list[1].node()
 
-        extracted_data_records = data_node.extract_data_node(test_data_node_specifier_01)
+        extracted_data_records = data_node.extract_data_node(test_data_node_specifier_ppt_01)
 
         expected_num_records = 21
 
@@ -313,7 +107,7 @@ class TestDataNodeExtract02(TestCase):
         outline_node_list = list(outline.list_all_nodes())
         data_node = outline_node_list[data_node_index].node()
 
-        extracted_data_records = data_node.extract_data_node(test_data_node_specifier_01)
+        extracted_data_records = data_node.extract_data_node(test_data_node_specifier_ppt_01)
 
         test_record = extracted_data_records[index]
         self.assertEqual(section, test_record['section_name'])
