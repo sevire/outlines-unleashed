@@ -172,7 +172,7 @@ class PowerPointGenerator:
                 section = row['section_name']
                 self._add_section_slide(prs, section)
             if row['slide_name'] != slide:
-                slide = row['section_name']
+                slide = row['slide_name']
                 text_frame = self._add_content_slide(prs, slide)
             self._add_slide_bullet(text_frame, row['bullet'])
 
