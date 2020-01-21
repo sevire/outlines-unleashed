@@ -112,7 +112,7 @@ class PowerPointGenerator:
         if section_sub_title_text is not None:
             section_subtitle_placeholder_key = PowerPointGenerator._get_placeholder_index('section_header', 'section_header_text')
             section_subtitle = slide.shapes.placeholders[section_subtitle_placeholder_key]
-            section_subtitle.text = section_title_text
+            section_subtitle.text = section_sub_title_text
 
     @staticmethod
     def _add_content_slide(presentation, title_text="(un-specified"):
@@ -135,7 +135,7 @@ class PowerPointGenerator:
         return text_frame
 
     @staticmethod
-    def _add_slide_bullet(text_frame, bullet_text):
+    def _add_slide_bullet(text_frame, bullet_text, bullet_level):
         """
         Adds a slide of bullets to the presentation.
 
@@ -146,12 +146,24 @@ class PowerPointGenerator:
 
         paragraph = text_frame.add_paragraph()
         paragraph.text = bullet_text
-        paragraph.level = 0
+        paragraph.level = bullet_level
 
-    def create_power_point_skeleton(self, data_node_table, template_ppt_path, output_ppt_path):
+    def create_power_point_skeleton(self, data_node, template_ppt_path, output_ppt_path):
         """
-        Takes the output of a data node transformation (a table) with a specific structure and uses it to
-        generate a PowerPoint file with associated slides.
+        Takes an un-transformed outline (for now) and interprets it in order to create a PowerPoint slide deck.
+
+        The outline is processed as follows:
+
+        - Root Node:
+          - Tag: Main Title for deck.
+          - Text: Sub-title for deck.
+        - Level 1 Node:
+          - Tag: Section Title
+          - Text: Section Sub-Title
+        - Level 2 Node
+          - Text: Slide Title
+        - Level 2+n Node (n=1...)
+          - Text: Bullet Level n
 
         The idea is to be able to create a skeleton presentation quickly.  The use case is professionals
         who use PPT as a status reporting tool (for example) who create a lot of presentations which aren't
@@ -166,14 +178,28 @@ class PowerPointGenerator:
         slide = ""
         text_frame = None  # Should be set before referenced as first row will always invoke a new slide
 
-        for row in data_node_table:
-            if row['section_name'] != section:
-                # Section has changed so add section slide
-                section = row['section_name']
-                self._add_section_slide(prs, section)
-            if row['slide_name'] != slide:
-                slide = row['slide_name']
-                text_frame = self._add_content_slide(prs, slide)
-            self._add_slide_bullet(text_frame, row['bullet'])
+        nodes = list(data_node.list_all_nodes())
+        for node_record in nodes:
+            node = node_record.node()
+            if node_record.depth == 0:
+                deck_title = node.text_tag
+                deck_sub_title = node.text
+                self._add_title_slide(prs, deck_title=deck_title, deck_sub_title=deck_sub_title)
+            elif node_record.depth == 1:
+                section_title = node.text_tag
+                section_sub_title = node.text
+                self._add_section_slide(prs, section_title_text=section_title, section_sub_title_text=section_sub_title)
+            elif node_record.depth == 2:
+                # Node is slide title, so we need to add a content slide and then process all subsequent bullet
+                # nodes.
+                title = node.text
+                text_frame = self._add_content_slide(prs, title)
+            else:
+                # Depth is more than two so this is a bullet to add to the existing text_frame
+
+                bullet_depth = node_record.depth - 3
+                bullet_text = node.text
+
+                self._add_slide_bullet(text_frame, bullet_text, bullet_depth)
 
         prs.save(output_ppt_path)
