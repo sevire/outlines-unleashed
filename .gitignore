@@ -1,2 +1,5 @@
 # Created by .ignore support plugin (hsz.mobi)
 /resources/test/ppt_output_01.pptx
+/venv/
+/outlines_unleashed.egg-info
+/dist/
