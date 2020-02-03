@@ -247,5 +247,5 @@ class TestDataNodeExtract02(TestCase):
         pass
 
     def test_convert_to_json(self):
-        json_string = json.dumps(test_data_node_specifier_01)
+        json_string = json.dumps(test_data_node_specifier_ppt_01)
         pass
