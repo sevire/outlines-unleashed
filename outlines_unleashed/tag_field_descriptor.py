@@ -35,42 +35,6 @@ class TagFieldDescriptor:
             re.DOTALL
         )
 
-        # matches = re.match(enhanced_regex, text, re.DOTALL)
-        # if matches is None:
-        #     return text, None
-        # else:
-        #     groups = matches.groups()
-        #     if len(groups) == 2:
-        #         tag = matches.group(1).strip()
-        #         extracted_text = matches.group(2).strip()
-        #         return extracted_text, tag
-        #     else:
-        #         raise MalformedTagRegex(
-        #             f"Number of matching groups in regex {len(groups)} invalid for tag matching, must be 0 or 2")
-        #
-        # tag_string = \
-        #     whitespace_characters_regex + \
-        #     '(' + \
-        #     self.left_delim + \
-        #     whitespace_characters_regex + \
-        #     '(' + \
-        #     tag_characters_regex + \
-        #     ')' + \
-        #     whitespace_characters_regex + \
-        #     self.right_delim + \
-        #     '){0,1}'
-        #
-        # text_string = \
-        #     whitespace_characters_regex + \
-        #     '(' + \
-        #     text_characters_regex + \
-        #     ')' + \
-        #     whitespace_characters_regex
-        #
-        # regex_string = tag_string + text_string
-        #
-        # self.tag_regex = re.compile(regex_string, re.DOTALL)
-
     def parse_tag(self, text_string):
         """
         Args:
