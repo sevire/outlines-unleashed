@@ -1,5 +1,6 @@
 # Created by .ignore support plugin (hsz.mobi)
 /resources/test/output_files/
 /venv/
-/outlines_unleashed.egg-info/
 /dist/
+/.idea/workspace.xml
+/outlines_unleashed.egg-info/
