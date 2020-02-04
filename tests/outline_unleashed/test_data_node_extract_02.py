@@ -1,4 +1,3 @@
-import json
 from unittest import TestCase
 from opml.outline import Outline
 import os
@@ -244,8 +243,4 @@ class TestDataNodeExtract02(TestCase):
         data_node = outline_node_list[data_node_index].node()
 
         extracted_data_records = data_node.extract_data_node(test_data_node_specifier_freeform_notes)
-        pass
-
-    def test_convert_to_json(self):
-        json_string = json.dumps(test_data_node_specifier_ppt_01)
         pass
