@@ -14,11 +14,11 @@ class TestOutputGeneratorsPpt01(TestCase):
         outline = Outline.from_opml(ppt_opml_file)
         nodes = list(outline.list_all_nodes())
         data_node = nodes[1].node()
-        ppt_driver_table = data_node.extract_data_node(test_data_node_specifier_ppt_01)
+        # ppt_driver_table = data_node.extract_data_node(test_data_node_specifier_ppt_01)
 
         output_generator = PowerPointGenerator()
         output_generator.create_power_point_skeleton(
-            ppt_driver_table,
+            data_node,
             template_path,
             output_path
         )
