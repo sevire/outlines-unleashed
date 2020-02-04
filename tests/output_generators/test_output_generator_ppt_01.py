@@ -6,7 +6,7 @@ from resources.test.test_data_node_specifiers import test_data_node_specifier_pp
 
 ppt_opml_file = "/Users/thomasdeveloper/Documents/Projects/outlines-unleashed/resources/test/opml_data_extraction_webapp_test_01.opml"
 template_path = "/Users/thomasdeveloper/Documents/Projects/outlines-unleashed/resources/test/ppt_template_01.pptx"
-output_path = "/Users/thomasdeveloper/Documents/Projects/outlines-unleashed/resources/test/ppt_output_01.pptx"
+output_path = "/Users/thomasdeveloper/Documents/Projects/outlines-unleashed/resources/test/output_files/ppt_output_01.pptx"
 
 
 class TestOutputGeneratorsPpt01(TestCase):
