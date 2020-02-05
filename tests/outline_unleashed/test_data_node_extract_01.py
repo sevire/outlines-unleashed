@@ -10,11 +10,12 @@ Gets in return a List of Dicts where each field in the dict corresponds to the f
 from typing import List
 from unittest import TestCase
 
-from opml.node_matching_criteria import NodeAncestryMatchingCriteria
 from opml.outline import Outline
 import tests.test_config as tcfg
 import os
 from ddt import ddt, data, unpack
+
+from resources.test.test_data_node_specifiers import data_node_specifier_test_driver
 
 data_driver_01 = (
     (1,
@@ -27,104 +28,6 @@ data_driver_01 = (
      ]),
 )
 
-data_node_specifier_test_driver = [
-    {
-        'risk_description': {
-            'primary_key': 'yes',  # Values: start, end, single, null
-            'type': 'string',
-            'field_value_specifier': 'text_value',
-            'ancestry_matching_criteria': [
-                NodeAncestryMatchingCriteria(),
-                NodeAncestryMatchingCriteria(text='Risks'),
-                NodeAncestryMatchingCriteria()
-            ],
-        },
-        'likelihood': {
-            'primary_key': 'no',  # Values: start, end, single, null
-            'type': 'string',
-            'field_value_specifier': 'text_value',
-            'ancestry_matching_criteria': [
-                NodeAncestryMatchingCriteria(),
-                NodeAncestryMatchingCriteria(text='Risks'),
-                NodeAncestryMatchingCriteria(),
-                NodeAncestryMatchingCriteria(child_number=1, text='Attributes'),
-                NodeAncestryMatchingCriteria(text_tag='L')
-            ],
-        },
-        'impact': {
-            'primary_key': 'no',  # Values: start, end, single, null
-            'type': 'string',
-            'field_value_specifier': 'text_value',
-            'ancestry_matching_criteria': [
-                NodeAncestryMatchingCriteria(),
-                NodeAncestryMatchingCriteria(text='Risks'),
-                NodeAncestryMatchingCriteria(),
-                NodeAncestryMatchingCriteria(child_number=1, text='Attributes'),
-                NodeAncestryMatchingCriteria(text_tag='I')
-            ]
-        },
-        'mitigation': {
-            'primary_key': 'no',  # Values: start, end, single, null
-            'type': 'string',
-            'field_value_specifier': 'text_value',
-            'ancestry_matching_criteria': [
-                NodeAncestryMatchingCriteria(),
-                NodeAncestryMatchingCriteria(text='Risks'),
-                NodeAncestryMatchingCriteria(),
-                NodeAncestryMatchingCriteria(child_number=1, text='Attributes'),
-                NodeAncestryMatchingCriteria(text_tag='M')
-            ]
-        }
-    },
-    {
-        'risk_description': {
-            'primary_key': 'yes',  # Values: start, end, single, null
-            'type': 'string',
-            'field_value_specifier': 'text_value',
-            'ancestry_matching_criteria': [
-                NodeAncestryMatchingCriteria(),
-                NodeAncestryMatchingCriteria(text='Risks'),
-                NodeAncestryMatchingCriteria(),
-                NodeAncestryMatchingCriteria()
-            ],
-        },
-        'likelihood': {
-            'primary_key': 'no',  # Values: start, end, single, null
-            'type': 'string',
-            'field_value_specifier': 'text_value',
-            'ancestry_matching_criteria': [
-                NodeAncestryMatchingCriteria(),
-                NodeAncestryMatchingCriteria(text='Risks'),
-                NodeAncestryMatchingCriteria(),
-            ]
-        },
-        'impact': {
-            'primary_key': 'no',  # Values: start, end, single, null
-            'type': 'string',
-            'field_value_specifier': 'text_value',
-            'ancestry_matching_criteria': [
-                NodeAncestryMatchingCriteria(),
-                NodeAncestryMatchingCriteria(text='Risks'),
-                NodeAncestryMatchingCriteria(),
-                NodeAncestryMatchingCriteria(),
-                NodeAncestryMatchingCriteria(child_number=1, text='Attributes'),
-                NodeAncestryMatchingCriteria(text_tag='I')
-            ],
-        },
-        'mitigation': {
-            'primary_key': 'no',  # Values: start, end, single, null
-            'type': 'string',
-            'field_value_specifier': 'text_value',
-            'ancestry_matching_criteria': [
-                NodeAncestryMatchingCriteria(),
-                NodeAncestryMatchingCriteria(text='Risks'),
-                NodeAncestryMatchingCriteria(),
-                NodeAncestryMatchingCriteria(),
-                NodeAncestryMatchingCriteria(child_number=1, text='Attributes'),
-                NodeAncestryMatchingCriteria(text_tag='M')
-            ],
-        },
-    }]
 
 @ddt
 class TestDataNodeExtract01(TestCase):
