@@ -15,7 +15,7 @@ import tests.test_config as tcfg
 import os
 from ddt import ddt, data, unpack
 
-from resources.test.test_data_node_specifiers import data_node_specifier_test_driver
+from resources.test.data_node_test_specifiers import data_node_specifier_test_driver
 
 data_driver_01 = (
     (1,

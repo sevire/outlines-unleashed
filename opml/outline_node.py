@@ -334,9 +334,9 @@ class OutlineNode:
     def _key_field_check(primary_key_filter, primary_key_flag):
         if primary_key_filter is None:
             return True
-        elif primary_key_filter is True and primary_key_flag is 'yes':
+        elif primary_key_filter is True and primary_key_flag == 'yes':
             return True
-        elif primary_key_filter is False and primary_key_flag is 'no':
+        elif primary_key_filter is False and primary_key_flag == 'no':
             return True
         else:
             return False
@@ -487,11 +487,11 @@ class OutlineNode:
                     criteria_list = descriptor_raw['descriptor'][raw_field_descriptor][field_property]
                     for criteria_set in criteria_list:
                         criteria_object = NodeAncestryMatchingCriteria(
-                            child_number=criteria_list['child_number'],
-                            text=criteria_list['text'],
-                            note=criteria_list['note'],
-                            text_tag=criteria_list['text_tag'],
-                            note_tag=criteria_list['note_tag'],
+                            child_number=criteria_set['child_number'],
+                            text=criteria_set['text'],
+                            note=criteria_set['note'],
+                            text_tag=criteria_set['text_tag'],
+                            note_tag=criteria_set['note_tag'],
                         )
                         descriptor['descriptor'][raw_field_descriptor][field_property].append(criteria_object)
                 else:

@@ -10,8 +10,8 @@ from opml.outline import Outline
 from opml.outline_node import OutlineNode
 from resources.test.expected_results_data import extracted_data_values_02
 from resources.test.json_serialized import serialized_json_01, serialized_json_specifier_03x
-from resources.test.test_data_node_specifiers import test_data_node_specifier_ppt_01, test_data_node_specifier_03x
-from resources.test.test_json_serialize_descriptors import test_json_descriptor_01
+from resources.test.data_node_test_specifiers import test_data_node_specifier_ppt_01, test_data_node_specifier_03x
+from resources.test.json_serialize_test_descriptors import test_json_descriptor_01
 
 
 @ddt

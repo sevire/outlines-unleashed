@@ -6,7 +6,7 @@ from ddt import ddt, unpack, data
 
 from resources.test.expected_results_data import extracted_data_values_01, extracted_data_values_02, \
     extracted_data_values_06, extracted_data_values_07
-from resources.test.test_data_node_specifiers import test_data_node_specifier_ppt_01, test_data_node_specifier_03x, \
+from resources.test.data_node_test_specifiers import test_data_node_specifier_ppt_01, test_data_node_specifier_03x, \
     test_data_node_specifier_05x, test_data_node_specifier_06x, test_data_node_specifier_07, \
     test_data_node_specifier_freeform_notes
 
