@@ -1,4 +1,5 @@
 import copy
+import json
 import re
 from typing import Tuple, Optional
 
@@ -7,6 +8,7 @@ from xml.etree.ElementTree import Element
 
 from opml.node_ancestry_item import NodeAncestryItem
 from opml.node_ancestry_record import NodeAncestryRecord
+from opml.node_matching_criteria import NodeAncestryMatchingCriteria
 from opml.opml_exceptions import MalformedOutline, MalformedTagRegex
 from outlines_unleashed.tag_field_descriptor import TagFieldDescriptor
 
@@ -221,7 +223,22 @@ class OutlineNode:
     def short_note(self):
         return self._process_string_for_display(self.note)
 
-    def extract_data_node(self, data_node_specifier):
+    def extract_data_node(self, data_node_specifier_version):
+        """
+        Dispatcher method which works out which version of the descriptor structure is being
+        passed in and then forwards the descriptor to the appropriate version specific extract
+        method.
+
+        :param data_node_specifier_version:
+        :return:
+        """
+        version = data_node_specifier_version['header']['descriptor_version_number']
+        descriptor = data_node_specifier_version['descriptor']
+
+        if version == '0.1':
+            return self._extract_data_node_v0_1(descriptor)
+
+    def _extract_data_node_v0_1(self, data_node_specifier):
         """
         Parse the sub_tree with self as a root and extract all the nodes which match the criteria defined
         in the data_node_specifier.
@@ -317,9 +334,9 @@ class OutlineNode:
     def _key_field_check(primary_key_filter, primary_key_flag):
         if primary_key_filter is None:
             return True
-        elif primary_key_filter is True and primary_key_flag is 'yes':
+        elif primary_key_filter is True and primary_key_flag == 'yes':
             return True
-        elif primary_key_filter is False and primary_key_flag is 'no':
+        elif primary_key_filter is False and primary_key_flag == 'no':
             return True
         else:
             return False
@@ -431,3 +448,56 @@ class OutlineNode:
             raise ValueError(f"Unrecognised field specifier {value_specifier}")
 
         return field_value
+
+    @staticmethod
+    def to_json(descriptor):
+        """
+        Takes a full descriptor (with header) and converts it to a json string.
+
+        Tries to use common code for all versions of the descriptor structure, but where there
+        is a need for specific logic for a given version it will be included.
+
+        :param descriptor:
+        :return:
+        """
+        # Note this is a fairly generic approach which may not work as structure evolves.
+        serialized_descriptor = json.dumps(descriptor, default=lambda o: o.__dict__, indent=4)
+
+        return serialized_descriptor
+
+    @staticmethod
+    def from_json(serialized_descriptor):
+        descriptor_raw = json.loads(serialized_descriptor)
+
+        # For now a very clunky approach to creating a Python descriptor from the JSON
+        # sourced dict structure.  Will refactor into an independent class later
+        # ToDo: Extract descriptor structure and logic into separate class
+
+        get_or_set = lambda x, y: x[y] if y in x else None
+
+        descriptor = {}
+        descriptor['header'] = descriptor_raw['header']
+        descriptor['descriptor'] = {}
+
+        for raw_field_descriptor in descriptor_raw['descriptor']:
+            descriptor['descriptor'][raw_field_descriptor] = {}
+            for field_property in descriptor_raw['descriptor'][raw_field_descriptor]:
+                if field_property == 'ancestry_matching_criteria':
+                    # We need to replace the list of dicts with a list of NodeAncestryMatchingCriteria objects
+                    descriptor['descriptor'][raw_field_descriptor][field_property] = []
+
+                    criteria_list = descriptor_raw['descriptor'][raw_field_descriptor][field_property]
+                    for criteria_set in criteria_list:
+                        criteria_object = NodeAncestryMatchingCriteria(
+                            child_number=get_or_set(criteria_set, 'child_number'),
+                            text=get_or_set(criteria_set, 'text'),
+                            note=get_or_set(criteria_set, 'note'),
+                            text_tag=get_or_set(criteria_set, 'text_tag'),
+                            note_tag=get_or_set(criteria_set, 'note_tag')
+                        )
+                        descriptor['descriptor'][raw_field_descriptor][field_property].append(criteria_object)
+                else:
+                    descriptor['descriptor'][raw_field_descriptor][field_property] = \
+                        descriptor_raw['descriptor'][raw_field_descriptor][field_property]
+
+        return descriptor
