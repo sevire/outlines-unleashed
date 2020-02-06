@@ -1,0 +1,71 @@
+{
+    "header": {
+        "descriptor_version_number": "0.1"
+    },
+    "descriptor": {
+        "Level_1": {
+            "primary_key": "yes",
+            "type": "string",
+            "field_value_specifier": "text_value",
+            "ancestry_matching_criteria": [
+                {}
+            ]
+        },
+        "Level_2": {
+            "primary_key": "yes",
+            "type": "string",
+            "field_value_specifier": "text_value",
+            "ancestry_matching_criteria": [
+                {},
+                {}
+            ]
+        },
+        "Level_3": {
+            "primary_key": "yes",
+            "type": "string",
+            "field_value_specifier": "text_value",
+            "ancestry_matching_criteria": [
+                {},
+                {},
+                {}
+            ]
+        },
+        "Level_4": {
+            "primary_key": "yes",
+            "type": "string",
+            "field_value_specifier": "text_value",
+            "ancestry_matching_criteria": [
+                {},
+                {},
+                {},
+                {}
+            ]
+        },
+        "Level_5": {
+            "primary_key": "yes",
+            "type": "string",
+            "field_value_specifier": "text_value",
+            "ancestry_matching_criteria": [
+                {},
+                {},
+                {},
+                {},
+                {}
+            ]
+        },
+        "Level_6": {
+            "primary_key": "yes",
+            "type": "string",
+            "field_value_specifier": "text_value",
+            "ancestry_matching_criteria": [
+                {},
+                {},
+                {},
+                {},
+                {},
+                {}
+            ]
+        }
+
+    }
+}
