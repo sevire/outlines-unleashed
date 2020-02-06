@@ -473,6 +473,8 @@ class OutlineNode:
         # sourced dict structure.  Will refactor into an independent class later
         # ToDo: Extract descriptor structure and logic into separate class
 
+        get_or_set = lambda x, y: x[y] if y in x else None
+
         descriptor = {}
         descriptor['header'] = descriptor_raw['header']
         descriptor['descriptor'] = {}
@@ -487,11 +489,11 @@ class OutlineNode:
                     criteria_list = descriptor_raw['descriptor'][raw_field_descriptor][field_property]
                     for criteria_set in criteria_list:
                         criteria_object = NodeAncestryMatchingCriteria(
-                            child_number=criteria_set['child_number'],
-                            text=criteria_set['text'],
-                            note=criteria_set['note'],
-                            text_tag=criteria_set['text_tag'],
-                            note_tag=criteria_set['note_tag'],
+                            child_number=get_or_set(criteria_set, 'child_number'),
+                            text=get_or_set(criteria_set, 'text'),
+                            note=get_or_set(criteria_set, 'note'),
+                            text_tag=get_or_set(criteria_set, 'text_tag'),
+                            note_tag=get_or_set(criteria_set, 'note_tag')
                         )
                         descriptor['descriptor'][raw_field_descriptor][field_property].append(criteria_object)
                 else:
