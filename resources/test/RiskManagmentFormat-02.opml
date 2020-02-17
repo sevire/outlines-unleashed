@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="2.0">
+  <head><!-- <editor scale="0.25" scale-mac="0.25" note-display="out-of-line">
+      <sidebar/>
+      <note-split-view height="59"/>
+      <column name="text" width="659"/>
+    </editor> -->
+    <title>data_extract_test_file_01</title>
+    <dateCreated>Sun, 16 Feb 2020 14:57:23 GMT</dateCreated>
+    <expansionState></expansionState>
+    <vertScrollState>0</vertScrollState>
+    <windowTop>232</windowTop>
+    <windowLeft>0</windowLeft>
+    <windowRight>680</windowRight>
+    <windowBottom>912</windowBottom>
+  </head>
+  <body>
+    <outline text="Data For Parsing #2" _note="{&#10;  &quot;node-object”: {&#10;    &quot;node-header&quot;: {&#10;      &quot;id&quot;: &quot;ian-test-risk-data2&quot;,&#10;      &quot;name&quot;: &quot;Simple Use case 1: Risk information.&quot;,&#10;      &quot;type&quot;: &quot;data-object&quot;&#10;    },&#10;    &quot;data-object-descriptor&quot;: [&#10;      {&#10;        &quot;depth&quot;: 2,&#10;        &quot;ancestry&quot;: [1, &quot;None&quot;],&#10;        &quot;tag&quot;: &quot;None&quot;,&#10;        &quot;text&quot;: &quot;None&quot;,&#10;        &quot;primary-key&quot;: true,&#10;        &quot;field-name&quot;: &quot;Risk Likelihood”,&#10;        &quot;field-value&quot;: &quot;node-text&quot;&#10;      },&#10;      {&#10;        &quot;depth&quot;: 3,&#10;        &quot;ancestry&quot;: [1, &quot;None&quot;, “None”],&#10;        &quot;tag&quot;: &quot;None&quot;,&#10;        &quot;text&quot;: &quot;None&quot;,&#10;        &quot;primary-key&quot;: true,&#10;        &quot;field-name&quot;: &quot;Risk Description”,&#10;        &quot;field-value&quot;: &quot;node-text&quot;&#10;      },&#10;     {&#10;        &quot;depth&quot;: 5,&#10;        &quot;ancestry&quot;: [1, &quot;None&quot;, “None”, 1, “None”],&#10;        &quot;tag&quot;: &quot;I&quot;,&#10;        &quot;text&quot;: &quot;None&quot;,&#10;        &quot;primary-key&quot;: false,&#10;        &quot;field-name&quot;: &quot;Risk Impact&quot;,&#10;        &quot;field-value&quot;: &quot;node-text&quot;&#10;      },&#10;      {&#10;        &quot;depth&quot;: 5,&#10;        &quot;ancestry&quot;: [1, &quot;None&quot;, “None”, 1, “None&quot;],&#10;        &quot;tag&quot;: &quot;M&quot;,&#10;        &quot;text&quot;: &quot;None&quot;,&#10;        &quot;primary-key&quot;: false,&#10;        &quot;field-name&quot;: &quot;Risk Mitigation&quot;,&#10;        &quot;field-value&quot;: &quot;node-text&quot;&#10;      }&#10;    ]&#10;  }&#10;}">
+      <outline text="Risks">
+        <outline text="High">
+          <outline text="It may take too long to build and we don&apos;t have anything in the meantime">
+            <outline text="Attributes">
+              <outline text="[*I*]High"/>
+            </outline>
+          </outline>
+          <outline text="It may be too expensive to build">
+            <outline text="Attributes">
+              <outline text="[*I*]Medium"/>
+            </outline>
+          </outline>
+        </outline>
+        <outline text="Low">
+          <outline text="There is a possibility that the world might end">
+            <outline text="Attributes">
+              <outline text="[*I*]Very High"/>
+              <outline text="[*M*]Pray every day"/>
+            </outline>
+          </outline>
+        </outline>
+      </outline>
+    </outline>
+  </body>
+</opml>

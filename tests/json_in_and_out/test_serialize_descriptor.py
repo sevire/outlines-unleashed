@@ -36,12 +36,17 @@ class TestSerializeDescriptor(TestCase):
                             non_key2,
                             non_key3):
         descriptor = OutlineNode.from_json(serialized_json_specifier_03x)
+        tag_text_delimiter = tuple(descriptor['header']['tag_delimiters']['text_delimiters'])
+        tag_note_delimiter = tuple(descriptor['header']['tag_delimiters']['note_delimiters'])
 
         # Use descriptor to process a node and check that output results are correct.
         data_node_index = 31
 
         outline = Outline.from_opml(
-            os.path.join(tcfg.test_resources_root, 'opml_data_extraction_test_02.opml'))
+            os.path.join(tcfg.test_resources_root, 'opml_data_extraction_test_02.opml'),
+            tag_text_delimiter,
+            tag_note_delimiter
+        )
 
         outline_node_list = list(outline.list_all_nodes())
         data_node = outline_node_list[data_node_index].node()

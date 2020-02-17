@@ -1,7 +1,17 @@
 serialized_json_01 = \
 """{
     "header": {
-        "descriptor_version_number": "0.1"
+        "descriptor_version_number": "0.1",
+        "tag_delimiters": {
+            "note_delimiters": [
+                "[*",
+                "*]"
+            ],
+            "text_delimiters": [
+                "[*",
+                "*]"
+            ]
+        }
     },
     "descriptor": {
         "key_field_1": {
@@ -164,7 +174,11 @@ serialized_json_01 = \
 serialized_json_02 = \
 """{
     "header": {
-        "descriptor_version_number": "0.1"
+        "descriptor_version_number": "0.1",
+        "tag_delimiters": {
+            "note_delimiters": ["[*", "*]"],
+            "text_delimiters": ["[*", "*]"]
+        }
     }
     "descriptor": {
         "key_field_1": {
@@ -327,7 +341,17 @@ serialized_json_02 = \
 serialized_json_specifier_03x = \
 """{
     "header": {
-        "descriptor_version_number": "0.1"
+        "descriptor_version_number": "0.1",
+        "tag_delimiters": {
+            "note_delimiters": [
+                "[*",
+                "*]"
+            ],
+            "text_delimiters": [
+                "[*",
+                "*]"
+            ]
+        }
     },
     "descriptor": {
         "key_field_1": {

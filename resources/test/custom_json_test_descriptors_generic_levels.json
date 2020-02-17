@@ -1,6 +1,10 @@
 {
     "header": {
-        "descriptor_version_number": "0.1"
+        "descriptor_version_number": "0.1",
+        "tag_delimiters": {
+            "note_delimiters": ["[*", "*]"],
+            "text_delimiters": ["[*", "*]"]
+        }
     },
     "descriptor": {
         "Level_1": {

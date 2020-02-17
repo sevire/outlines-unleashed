@@ -40,7 +40,11 @@ test_data_node_specifier_ppt_01 = {
 
 test_data_node_specifier_03x = {
     'header': {
-        'descriptor_version_number': '0.1'
+        'descriptor_version_number': '0.1',
+        'tag_delimiters': {
+            'note_delimiters': ['[*', '*]'],
+            'text_delimiters': ['[*', '*]']
+        }
     },
     'descriptor': {
         'key_field_1': {
