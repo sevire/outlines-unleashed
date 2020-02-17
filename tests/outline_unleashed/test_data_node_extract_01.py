@@ -15,6 +15,7 @@ import tests.test_config as tcfg
 import os
 from ddt import ddt, data, unpack
 
+from outlines_unleashed.outline_parser import OutlineParser
 from resources.test.data_node_test_specifiers import data_node_specifier_test_driver
 
 data_driver_01 = (
@@ -37,16 +38,12 @@ class TestDataNodeExtract01(TestCase):
 
         tag_delimiters_text = ('[*', '*]')
 
-        outline = Outline.from_opml(os.path.join(tcfg.test_resources_root,
-                                                 'opml_data_extraction_test_01.opml'),
-                                    tag_delimiters_text
-                                    )
-
-        # Create list of all nodes (plus ancestry) to allow acess to nodes by index.
-        self.node_list = list(outline.list_all_nodes())
-
-        test_data_node = self.node_list[data_node_index].node()
-        self.extracted_data_table = test_data_node.extract_data_node(data_node_descriptor)
+        outline_file_path = os.path.join(tcfg.test_resources_root, 'opml_data_extraction_test_01.opml')
+        outline_parser = OutlineParser(outline_file_path, tag_delimiters_text)
+        self.extracted_data_table = outline_parser.extract_data_node(
+            data_node_index=data_node_index,
+            data_node_descriptor=data_node_descriptor
+        )
 
     def test_data_node_extract_properties(self):
         self.assertIsInstance(self.extracted_data_table, List)
