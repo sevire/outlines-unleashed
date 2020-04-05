@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 setup(
     name='outlines-unleashed',
     version='0.0.8',
-    packages=['opml', 'tests', 'tests.opml', 'tests.outline_unleashed', 'resources', 'resources.test',
+    packages=['outline', 'tests', 'tests.outline', 'tests.outline_unleashed', 'resources', 'resources.test',
               'outlines_unleashed', 'output_generators'],
     url='https://github.com/sevire/outlines-unleashed',
     license='TBD',
@@ -20,5 +20,5 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    python_requires='>=3.6',
+    python_requires='>=3.6', install_requires=['ddt']
 )

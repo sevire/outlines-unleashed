@@ -1,0 +1,2 @@
+class MalformedTagRegex(Exception):
+    pass

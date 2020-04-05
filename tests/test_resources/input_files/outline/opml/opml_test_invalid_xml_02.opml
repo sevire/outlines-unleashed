@@ -1,0 +1,4 @@
+<!--
+No tags.  XML document must have exactly one top level element
+-->
+<top>This will generate an invalid token error &</top>

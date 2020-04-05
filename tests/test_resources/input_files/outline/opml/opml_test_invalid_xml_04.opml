@@ -1,0 +1,4 @@
+<!--
+No tags.  XML document must have exactly one top level element
+-->
+<top>This will generate a duplicate attribute error</top>This is junk

@@ -2,8 +2,6 @@ import re
 from functools import reduce
 from typing import Tuple
 
-from opml.opml_exceptions import MalformedTagRegex
-
 whitespace_characters_regex = r'\s*'
 tag_characters_regex = '[a-zA-Z-_]+'
 text_characters_regex = '.+'

@@ -10,11 +10,10 @@ class OutlineParser:
     """
     def __init__(self, outline_path, default_tag_delimiters):
         """
-
         :param outline_path: Full path to opml file for outline.
         :param default_tag_delimiters: Tag delimiter to use if one isn't supplied for a given descriptor.
         """
-        self.outline = Outline.from_opml(outline_path, default_tag_delimiters)
+        self.outline = Outline.from_opml(outline_path)
         pass
 
     def identify_data_nodes(self):
@@ -30,7 +29,7 @@ class OutlineParser:
         """
 
     def extract_data_node(self, data_node_index, data_node_descriptor):
-        node_list = list(self.outline.list_all_nodes())
+        node_list = self.outline.list_nodes()
         test_data_node = node_list[data_node_index].node()
         extracted_data_table = test_data_node.extract_data_node(data_node_descriptor)
         return extracted_data_table

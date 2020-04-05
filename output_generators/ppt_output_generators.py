@@ -178,7 +178,7 @@ class PowerPointGenerator:
         slide = ""
         text_frame = None  # Should be set before referenced as first row will always invoke a new slide
 
-        nodes = list(data_node.list_all_nodes())
+        nodes = list(data_node.iter_nodes())
         for node_record in nodes:
             node = node_record.node()
             if node_record.depth == 0:
