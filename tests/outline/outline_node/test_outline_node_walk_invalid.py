@@ -10,7 +10,7 @@ from ddt import ddt, data
 @ddt
 class TestOutlineNodeWalkInvalid(TestCase):
 
-    @data('opml-test-invalid-opml-04.opml',
+    @data('opml-test-invalid-opml-05.opml',
           # 'opml-test-invalid-opml-05.opml', (It's not an error to have additional attributes according to OPML spec)
           'opml-test-invalid-opml-06.opml')
     def test_invalid_node_01(self, filename):

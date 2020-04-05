@@ -13,8 +13,7 @@
     <windowBottom>872</windowBottom>
   </head>
   <body>
-    <outline text="H1:Heading A" _note="Notes for Heading A">
+    <outline text="H1:Heading A" _note="Notes for Heading A" invalid="invalid attribute">
     </outline>
-    <invalid>This is an invalid node for an outline</invalid>
   </body>
 </opml>

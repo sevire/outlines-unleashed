@@ -5,6 +5,7 @@ import outline.opml_exceptions as ex
 from xml.etree import ElementTree
 from outline import outline_utilities as outil
 from outline.outline_node import OutlineNode
+from outline.outline_utilities import is_valid_tag
 
 
 class Outline:
@@ -73,9 +74,11 @@ class Outline:
         if full_validate is True:
             pass  # Put more here later
         else:
-            # Minimum validation.  Version is 2.0
+            # Minimum validation.
+
             if self.version != '2.0':
                 raise ex.InvalidOpmlVersion(f'Version is {self.version} must be 2.0')
+
 
     # =================================================================================================================
     # Methods used during initialisation of an outline.  Includes factory methods for creating an outline from
@@ -98,8 +101,14 @@ class Outline:
             top_outline = ElementTree.Element('outline')
             top_outline.set('text', '')  # All outline elements must have text attribute so need to add for top element
 
-            for outline in body:
-                top_outline.append(outline)
+            outline_count = 0
+            for node in body:
+                is_valid_tag(node)
+                outline_count += 1
+                top_outline.append(node)
+            if outline_count == 0:
+                # There has to be at least one <outline> element so abort.
+                raise ex.MalformedOutline(f'No <outline> node under <body> element.')
 
             should_be_head = root.findall('head')
             if len(should_be_head) == 1 and should_be_head[0].tag == 'head':

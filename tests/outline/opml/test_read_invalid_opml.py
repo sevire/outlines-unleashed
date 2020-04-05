@@ -4,7 +4,7 @@ Tests specifically of the OPML format
 import os
 from unittest import TestCase
 
-from outline.opml_exceptions import InvalidOpmlVersion, MissingOpmlElement
+from outline.opml_exceptions import InvalidOpmlVersion, MissingOpmlElement, MalformedOutline
 from outline.outline import Outline
 from tests.test_utilities.test_config import input_files_root
 from ddt import ddt, unpack, data
@@ -23,9 +23,8 @@ class TestInvalidOpml(TestCase):
         ('opml-test-invalid-opml-01.opml', InvalidOpmlVersion, None),
         ('opml-test-invalid-opml-02.opml', MissingOpmlElement, None),
         ('opml-test-invalid-opml-03.opml', InvalidOpmlVersion, None),
-        ('opml-test-invalid-opml-04.opml', MissingOpmlElement, None),
-        ('opml-test-invalid-opml-05.opml', MissingOpmlElement, None),
-        ('opml-test-invalid-opml-06.opml', MissingOpmlElement, None),
+        ('opml-test-invalid-opml-04.opml', MalformedOutline, None),
+        ('opml-test-invalid-opml-05.opml', MalformedOutline, None),
     ]
 
     local_path = os.path.join('outline', 'opml')

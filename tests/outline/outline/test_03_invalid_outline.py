@@ -12,7 +12,7 @@ test_data_version_filename = (
         (os.path.join(folder_from_resources_root, 'opml-test-invalid-opml-01.opml'), 'InvalidOpmlVersion'),
         (os.path.join(folder_from_resources_root, 'opml-test-invalid-opml-02.opml'), 'MalformedOutline'),
         (os.path.join(folder_from_resources_root, 'opml-test-invalid-opml-03.opml'), 'InvalidOpmlVersion'),
-        (os.path.join(folder_from_resources_root, 'opml-test-invalid-opml-04.opml'), 'MalformedOutline'),
+        (os.path.join(folder_from_resources_root, 'opml-test-invalid-opml-05.opml'), 'MalformedOutline'),
         (os.path.join(folder_from_resources_root, 'opml-test-invalid-opml-05.opml'), 'MalformedOutline'),
         (os.path.join(folder_from_resources_root, 'opml-test-invalid-opml-06.opml'), 'MalformedOutline'),
 )
