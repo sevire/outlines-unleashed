@@ -33,6 +33,7 @@ def outline_identity(text):
     """
     return text
 
+
 def outline_int(text):
     """parses text value from outline to an int value.
 
@@ -94,7 +95,8 @@ outline_node_structures = {
     'outline': {
         'attributes': {
             '_note': NodeFieldSpecifier(required=False, default='', value_parser=outline_identity),
-            'text': NodeFieldSpecifier(required=True, default=None, value_parser=outline_identity)
+            'text': NodeFieldSpecifier(required=True, default=None, value_parser=outline_identity),
+            'type': NodeFieldSpecifier(required=False,default='', value_parser=outline_identity),
         },
         'child_elements': {'outline'}
     },

@@ -3,7 +3,7 @@ from unittest import TestCase
 
 from ddt import ddt, data, unpack
 import tests.test_utilities.test_config as tcfg
-from opml.outline import Outline
+from outline.outline import Outline
 
 tag_extract_data=(
     (12, 'text', '[*TAG-TEXT-H5*]H5: Heading L'),
@@ -23,7 +23,7 @@ class TestOutlineNodeTag(TestCase):
     """Tests outline with embedded tags (for unleashing) but for an unleashed outline."""
     def setUp(self) -> None:
 
-        self.outline = Outline.from_opml(os.path.join(tcfg.input_files_root, 'opml-test-valid-01.opml'))
+        self.outline = Outline.from_opml(os.path.join(tcfg.input_files_root, 'outline', 'outline_node', 'outline-test-valid-01.opml'))
 
     @data(*tag_extract_data)
     @unpack

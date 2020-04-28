@@ -8,3 +8,11 @@ class InvalidOpmlVersion(Exception):
 
 class MissingOpmlElement(Exception):
     pass
+
+
+class MissingOpmlAttribute(Exception):
+    pass
+
+
+class InvalidOpmlAttribute(Exception):
+    pass

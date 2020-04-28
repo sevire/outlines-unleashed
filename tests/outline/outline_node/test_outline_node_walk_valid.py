@@ -5,7 +5,7 @@ import os
 from unittest import TestCase
 from ddt import ddt, data, unpack
 import tests.test_utilities.test_config as tcfg
-from opml.outline import Outline
+from outline.outline import Outline
 
 test_node_text_values = (
     (0, ''),
@@ -35,7 +35,7 @@ ancestry_test_values = (
 @ddt
 class TestOutlineNodeWalk(TestCase):
     def setUp(self) -> None:
-        self.outline = Outline.from_opml(os.path.join(tcfg.input_files_root, 'opml-test-valid-01.opml'))
+        self.outline = Outline.from_opml(os.path.join(tcfg.input_files_root, 'outline', 'outline_node', 'outline-test-valid-01.opml'))
 
     def test_all_nodes_covered_01(self):
         size_of_outline = self.outline.total_sub_nodes()

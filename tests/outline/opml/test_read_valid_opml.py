@@ -4,9 +4,7 @@ structure.
 """
 import os
 from unittest import TestCase
-
 from ddt import ddt, unpack, data
-
 from outline.outline import Outline
 from tests.test_utilities.test_config import input_files_root
 

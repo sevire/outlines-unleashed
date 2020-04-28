@@ -25,10 +25,9 @@ class OutlineNode:
     NOTE: This implementation favours composition over extension, as the purpose of this implementation is to
     hide the complexity of generic XML nodes and just expose the simple interface required for an outline.
     """
-    max_len_for_short = 15
+    _max_len_for_short = 15
 
-    def __init__(self,
-                 outline_node: Element):
+    def __init__(self, outline_node: Element):
         """
         Do some checking that we have been passed in the right type of object (should be an xml.etree.Element
         object with tag of outline and a few other things.
@@ -67,6 +66,48 @@ class OutlineNode:
         :return:
         """
         return len(self._node)
+
+    @classmethod
+    def create_outline_node(cls, outline_text=None, outline_note=None, children_data=None):
+        attrib = {}
+        if outline_text is not None:
+            attrib['text'] = outline_text
+        else:
+            attrib['text'] = ''
+
+        if outline_note is not None:
+            attrib['_note'] = outline_note
+
+        element = Element('outline', attrib)
+        if children_data is not None:
+            for child_data in children_data:
+                child_node = cls.create_outline_node(outline_text=child_data['text'], outline_note=child_data['note'])
+                element.append(child_node)
+
+        node = OutlineNode(element)
+
+        return node
+
+    def validate(self, full_validation_flag):
+        """
+        Carry out validation on a given outline node.  This will involve things like checking that obligatory elements
+        are present and that no unexpected elements are present.
+
+        :param full_validation_flag:
+        :return:
+        """
+
+        if full_validation_flag:
+            #  Parse this and all sub-nodes and check all elements and all attributes are valide
+            node_list = self.list_nodes()
+
+            for node_entry in node_list:
+                outline_node = node_entry.node()
+                node_element = outline_node._node
+                outil.validate_attributes(node_element)
+            return True
+        else:
+            return True
 
     def iter_nodes(self, ancestry: NodeAncestryRecord = None):
         """
@@ -139,47 +180,29 @@ class OutlineNode:
         ancestry = None
         return ancestry
 
-    @classmethod
-    def create_outline_node(cls, outline_text='', outline_note=None, children_data=None):
-        attrib = {}
-        if outline_text is not None:
-            attrib['text'] = outline_text
-
-        if outline_note is not None:
-            attrib['_note'] = outline_note
-
-        element = Element('outline', attrib)
-        if children_data is not None:
-            for child_data in children_data:
-                child_node = cls.create_outline_node(outline_text=child_data['text'], outline_note=child_data['note'])
-                element.append(child_node)
-
-        node = OutlineNode(element)
-
-        return node
-
     def __str__(self):
         text_display_string = self._process_string_for_display(self.text)
         note_display_string = self._process_string_for_display(self.note)
-        return 'OutlineNode: children: {}, text: "{}", note: "{}"'.format(len(self),
-                                                                          text_display_string,
-                                                                          note_display_string)
+        return 'OutlineNode: children: {}, text: \'{}\', note: \'{}\''.format(len(self),
+                                                                              text_display_string, note_display_string)
 
     def __repr__(self):
         text_display_string = self._process_string_for_display(self.text)
         note_display_string = self._process_string_for_display(self.note)
 
-        return 'OutlineNode(text: \'{}\', note: \'{}\')'.format(text_display_string, note_display_string)
+        return f'OutlineNode.create_outline_node(text: \'{text_display_string}\', note: \'{note_display_string}\')'
 
     @staticmethod
     def _process_string_for_display(long_string):
         # Remove leading and trailing whitespace and line breaks
         string_stripped = long_string.strip().replace('\n', ' ').replace('\r', '')
 
-        is_truncated = True if len(string_stripped) > OutlineNode.max_len_for_short else False
-        length = min(len(string_stripped), OutlineNode.max_len_for_short)
+        ellipsis_str = '...'
 
-        ellipsis_string = '...' if is_truncated else ''
+        is_truncated = True if len(string_stripped) > OutlineNode._max_len_for_short else False
+        length = min(len(string_stripped), OutlineNode._max_len_for_short - len(ellipsis_str))
+
+        ellipsis_string = ellipsis_str if is_truncated else ''
         display_string = string_stripped[:length]
         return_string = display_string + ellipsis_string
 

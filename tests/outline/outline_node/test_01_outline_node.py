@@ -6,8 +6,10 @@ import tests.test_utilities.test_config as tcfg
 
 
 class TestOutlineNode(TestCase):
+    local_path = os.path.join('outline', 'outline')
+
     def test_child_access(self):
-        outline = Outline.from_opml(os.path.join(tcfg.input_files_root, 'opml-test-valid-01.opml'))
+        outline = Outline.from_opml(os.path.join(tcfg.input_files_root, self.local_path, 'outline-test-valid-01.opml'))
 
         top_level_node = outline.top_outline_node
 
@@ -23,8 +25,7 @@ class TestOutlineNode(TestCase):
             self.assertEqual(child, child_outline_nodes[index])
 
     def test_field_access(self):
-        outline = Outline.from_opml(
-            os.path.join(tcfg.input_files_root, 'opml-test-valid-01.opml'))
+        outline = Outline.from_opml(os.path.join(tcfg.input_files_root, self.local_path, 'outline-test-valid-01.opml'))
 
         top_level_node = outline.top_outline_node  # Access the top level OutlineNode object
 
@@ -51,7 +52,7 @@ class TestOutlineNode(TestCase):
         that same OutlineNode object is returned for same outline element. Some
         thinking to do before we can do this. :return:
         """
-        outline = Outline.from_opml(os.path.join(tcfg.input_files_root, 'outline-test-valid-01.outline'))
+        outline = Outline.from_opml(os.path.join(tcfg.input_files_root, self.local_path, 'outline-test-valid-01.opml'))
 
         top_level_node = outline.top_outline_node  # Access the top level OutlineNode object
 

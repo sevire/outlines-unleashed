@@ -7,13 +7,13 @@
     <title>Untitled 2</title>
     <expansionState>0,16,32</expansionState>
     <vertScrollState>0</vertScrollState>
-    <windowTop>288</windowTop>
-    <windowLeft>341</windowLeft>
-    <windowRight>1052</windowRight>
-    <windowBottom>968</windowBottom>
+    <windowTop>193</windowTop>
+    <windowLeft>400</windowLeft>
+    <windowRight>1111</windowRight>
+    <windowBottom>873</windowBottom>
   </head>
   <body>
-    <outline text="H1:Heading A (Read Notes)" _note="Note that this file shouldn’t be edited as it is very sensitive to changes in expansion state and window positioning which are encoded within the OPML file.  If you edit the file and change the nodes which are expanded or move or resize the window, the unit tests will almost certainly fail.">
+    <outline text="H1:Heading A" _note="Notes for Heading A">
       <outline text=" (-TAG-TEXT-H2B-)H2: Heading B" _note="Notes for Heading C">
         <outline text="H3: Heading C">
           <outline text="H4: Heading D">

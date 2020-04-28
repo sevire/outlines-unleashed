@@ -1,14 +1,17 @@
 import os
 from unittest import TestCase
 import tests.test_utilities.test_config as tcfg
-from opml.node_ancestry_item import NodeAncestryItem
-from opml.node_ancestry_record import NodeAncestryRecord
-from opml.outline import Outline
+from outline.node_ancestry_item import NodeAncestryItem
+from outline.node_ancestry_record import NodeAncestryRecord
+from outline.outline import Outline
+from tests.test_utilities.test_config import input_files_root
 
 
 class TestNodeAncestryRecord(TestCase):
+    folder_from_resources_root = os.path.join(input_files_root, 'outline', 'node_ancestry')
+
     def setUp(self) -> None:
-        self.outline = Outline.from_opml(os.path.join(tcfg.input_files_root, 'opml-test-valid-01.opml'))
+        self.outline = Outline.from_opml(os.path.join(self.folder_from_resources_root, 'opml-test-valid-opml-01.opml'))
 
     def test_ancestry_01(self):
         node_list = list(self.outline.iter_nodes())

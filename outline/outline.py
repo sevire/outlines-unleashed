@@ -71,14 +71,7 @@ class Outline:
         self.windowBottom = outil.get_valid_element_value(self._head, 'windowBottom')
         self.windowRight = outil.get_valid_element_value(self._head, 'windowRight')
 
-        if full_validate is True:
-            pass  # Put more here later
-        else:
-            # Minimum validation.
-
-            if self.version != '2.0':
-                raise ex.InvalidOpmlVersion(f'Version is {self.version} must be 2.0')
-
+        self.validate(full_validate)
 
     # =================================================================================================================
     # Methods used during initialisation of an outline.  Includes factory methods for creating an outline from
@@ -119,19 +112,19 @@ class Outline:
             return top_outline, head, root
 
     @classmethod
-    def from_opml(cls, opml_path: str):
+    def from_opml(cls, opml_path: str, full_validate=False):
         outline = ElementTree.parse(opml_path)
 
-        return cls(*Outline.initialise_opml_tree(outline))
+        return cls(*Outline.initialise_opml_tree(outline), full_validate=full_validate)
 
     @classmethod
-    def from_etree(cls, e_tree):
+    def from_etree(cls, e_tree, full_validate=False):
         outline = e_tree
 
         # Deep copy to de-couple from the external structure that was passed in.
         outline_copy = copy.deepcopy(outline)
 
-        return cls(*Outline.initialise_opml_tree(outline_copy))
+        return cls(*Outline.initialise_opml_tree(outline_copy), full_validate=full_validate)
 
     def total_sub_nodes(self):
         return self.top_outline_node.total_sub_nodes()
@@ -152,3 +145,11 @@ class Outline:
         :return:
         """
         return self.top_outline_node.list_nodes()
+
+    def validate(self, full_validation_flag):
+        # Minimum validation.
+        if self.version != '2.0':
+            raise ex.InvalidOpmlVersion(f'Version is {self.version} must be 2.0')
+        if full_validation_flag is True:
+            return self.top_outline_node.validate(full_validation_flag=full_validation_flag)
+        return True
