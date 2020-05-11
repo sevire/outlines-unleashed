@@ -1,12 +1,23 @@
+import copy
 import json
-
+from typing import Optional
 from outlines_unleashed.node_ancestry_matching_criteria import NodeAncestryMatchingCriteria
+from outlines_unleashed.unleashed_outline_exceptions import InvalidDataNodeSpecifierVersion
 
 
-class DataNodeDescriptor:
+class DataNodeSpecifier:
     """
-    Encapsulates the logic required to define nodes which match criteria for a data node and carry out
-    the matching.  Includes the following functionality:
+    Data Node Specifier: The object used to represent the instructions for how to find the data fields within a data node.
+
+    Data Node Field Descriptors: The record within the DNS which contains the instruction for decoding the data node.
+
+    Data Node Field Descriptor: Individual instructions for locating a specific field within a Data Node.
+
+    The instructions are contained within a field within the object (dns_structure).  Given a data node, the
+    object will find and extract all the data nodes within the node and return in a tabular format (defined within
+    a list or records where each record is a dictionary of fixed format depending upon the defined fields).
+
+    Includes the following functionality:
 
     - Reads and validates a JSON representation of a data node descriptor (in multiple versions and formats
       potentially.
@@ -14,19 +25,18 @@ class DataNodeDescriptor:
       standard data node table format for onward transformation and output.
     """
 
-    def __init__(self, dnd_structure):
+    def __init__(self, dns_structure):
         """
-        Initialises the DND based on input.  If nothing is passed in, then an empty structure will be created
-        which needs to have field definitions added to it.  Otherwise a data structure will be passed in which
-        represents the definitions for each field within the outline.
+        Initialises the DND based on an input data structure which defines the fields to be extracted and the
+        criteria to be used to locate each field.
 
         ToDo: Consider possibility that there may be more than one field definition for a field.
-        :param dnd_structure:
+        :param dns_structure:
         """
-        pass
+        self.dns_structure = dns_structure
 
     @classmethod
-    def from_json(cls, serialized_descriptor):
+    def from_json(cls, serialized_specifier):
         """
         Overloaded function which will take one of:
         - A string containing a JSON representation of a DND
@@ -37,40 +47,51 @@ class DataNodeDescriptor:
         create a new DND object.
         :return:
         """
-        pass
-
-        descriptor_raw = json.loads(serialized_descriptor)
+        specifier_raw = json.loads(serialized_specifier)
 
         # For now a very clunky approach to creating a Python descriptor from the JSON
         # sourced dict structure.  Will refactor into an independent class later
         # ToDo: Extract descriptor structure and logic into separate class
 
-        get_or_set = lambda x, y: x[y] if y in x else None
+        # Set up the empty structure into which we will build the specifier, and initialise header fields from json
+        specifier = {'header': specifier_raw['header'], 'descriptor': {}}
 
-        descriptor = {'header': descriptor_raw['header'], 'descriptor': {}}
+        # Add the text and note tag regex delimiters.
+        # ToDo: Develop clear rules for the value to use for tag delimiters to indicate not specified etc.
+        text_tag_delimiter_left = specifier_raw['header']['tag_delimiters']['text_delimiters'][0]
+        text_tag_delimiter_right = specifier_raw['header']['tag_delimiters']['text_delimiters'][1]
+        note_tag_delimiter_left = specifier_raw['header']['tag_delimiters']['note_delimiters'][0]
+        note_tag_delimiter_right = specifier_raw['header']['tag_delimiters']['note_delimiters'][1]
 
-        for raw_field_descriptor in descriptor_raw['descriptor']:
-            descriptor['descriptor'][raw_field_descriptor] = {}
-            for field_property in descriptor_raw['descriptor'][raw_field_descriptor]:
+        specifier['header']['tag_delimiters'] = {}
+        specifier['header']['tag_delimiters']['text_delimiters'] = [text_tag_delimiter_left, text_tag_delimiter_right]
+        specifier['header']['tag_delimiters']['note_delimiters'] = [note_tag_delimiter_left, note_tag_delimiter_right]
+
+        raw_descriptor = specifier_raw['descriptor']
+
+        for raw_field_descriptor in raw_descriptor:
+            specifier['descriptor'][raw_field_descriptor] = {}
+            for field_property in specifier_raw['descriptor'][raw_field_descriptor]:
                 if field_property == 'ancestry_matching_criteria':
                     # We need to replace the list of dicts with a list of NodeAncestryMatchingCriteria objects
-                    descriptor['descriptor'][raw_field_descriptor][field_property] = []
+                    specifier['descriptor'][raw_field_descriptor][field_property] = []
 
-                    criteria_list = descriptor_raw['descriptor'][raw_field_descriptor][field_property]
+                    criteria_list = specifier_raw['descriptor'][raw_field_descriptor][field_property]
                     for criteria_set in criteria_list:
                         criteria_object = NodeAncestryMatchingCriteria(
-                            child_number=get_or_set(criteria_set, 'child_number'),
-                            text=get_or_set(criteria_set, 'text'),
-                            note=get_or_set(criteria_set, 'note'),
-                            text_tag=get_or_set(criteria_set, 'text_tag'),
-                            note_tag=get_or_set(criteria_set, 'note_tag')
+                            child_number=criteria_set.get('child_number', None),
+                            text=criteria_set.get('text', None),
+                            note=criteria_set.get('note', None),
+                            text_tag=criteria_set.get('text_tag', None),
+                            note_tag=criteria_set.get('note_tag', None)
                         )
-                        descriptor['descriptor'][raw_field_descriptor][field_property].append(criteria_object)
+                        specifier['descriptor'][raw_field_descriptor][field_property].append(criteria_object)
                 else:
-                    descriptor['descriptor'][raw_field_descriptor][field_property] = \
-                        descriptor_raw['descriptor'][raw_field_descriptor][field_property]
+                    specifier['descriptor'][raw_field_descriptor][field_property] = \
+                        raw_descriptor[raw_field_descriptor][field_property]
 
-        return descriptor
+        return cls(specifier)
+
     def to_json_str(self):
         pass
 
@@ -120,22 +141,23 @@ class DataNodeDescriptor:
 
         return serialized_descriptor
 
-    def extract_data_node(self, data_node_specifier_version):
+    def extract_data_node_dispatch(self, data_node):
         """
         Dispatcher method which works out which version of the descriptor structure is being
         passed in and then forwards the descriptor to the appropriate version specific extract
         method.
 
-        :param data_node_specifier_version:
+        :param data_node:
         :return:
         """
-        version = data_node_specifier_version['header']['descriptor_version_number']
-        descriptor = data_node_specifier_version['descriptor']
+        version = self.dns_structure['header']['descriptor_version_number']
 
         if version == '0.1':
-            return self._extract_data_node_v0_1(descriptor)
+            return self._extract_data_node_v0_1(data_node)
+        else:
+            raise InvalidDataNodeSpecifierVersion(f'Version of [{version}] not valid for Data Node Specifier.')
 
-    def _extract_data_node_v0_1(self, data_node_specifier):
+    def _extract_data_node_v0_1(self, data_node):
         """
         Parse the sub_tree with self as a root and extract all the nodes which match the criteria defined
         in the data_node_specifier.
@@ -156,13 +178,22 @@ class DataNodeDescriptor:
 
         This is what is then returned to the caller.
 
-        :param data_node_specifier:
+        :param data_node:
         :return:
         """
-        match_list = self.match_data_node(data_node_specifier)
+        # If the data node specifier includes tag delimiters, then override any existing values on the data node.
+
+        delimiters = self.dns_structure['header']['tag_delimiters']
+        if delimiters['text_delimiters'] is not [None, None]:
+            data_node.tag_regex_text = tuple(delimiters['text_delimiters'])
+
+        if delimiters['note_delimiters'] is not [None, None]:
+            data_node.tag_regex_note = tuple(delimiters['note_delimiters'])
+
+        match_list = self.match_data_node(data_node)
         data_node_table = []
-        primary_key_field_list = self.extract_field_names(data_node_specifier, primary_key_only=True)
-        non_primary_key_field_list = self.extract_field_names(data_node_specifier, primary_key_only=False)
+        primary_key_field_list = self.extract_field_names(primary_key_only=True)
+        non_primary_key_field_list = self.extract_field_names(primary_key_only=False)
         empty_data_node_record = {key: None for key in primary_key_field_list + non_primary_key_field_list}
 
         # Initialise record for first row
@@ -238,51 +269,49 @@ class DataNodeDescriptor:
         else:
             return False
 
-    @staticmethod
-    def extract_field_names(data_node_specifier, primary_key_only: Optional[bool] = None):
+    def extract_field_names(self, primary_key_only: Optional[bool] = None):
+        descriptor = self.dns_structure['descriptor']
 
         fields = [
-            field_name for field_name in data_node_specifier
-            if OutlineNode._key_field_check(primary_key_only, data_node_specifier[field_name]['primary_key'])
+            field_name for field_name in descriptor
+            if DataNodeSpecifier._key_field_check(primary_key_only, descriptor[field_name]['primary_key'])
         ]
         return fields
 
-    def match_data_node(self, field_specifications):
+    def match_data_node(self, unleashed_node):
         """
-        Treat this node as the root of a data node embedded within a larger outline structure.  Using the
+        Treat the supplied node as the root of a data node embedded within a larger outline structure.  Using the
         field_specifications provided identify all nodes within the data_node sub-tree structure which match
         the supplied criteria, and extract the information required to fully define each extracted field
 
-        :param field_specifications: A structure which defines the properties of a field to be extracted and
-               also the criteria which define the properties of nodes which map to that field.
-
+        :param unleashed_node:
         :return: Information required to create a field object for each matched field and construct records
                  from the fields.
         """
         match_list = []
-        for data_node_list_entry in self.iter_nodes():
-            matched_field_data = self.match_field_node(data_node_list_entry, field_specifications)
+        for data_node_list_entry in unleashed_node.iter_unleashed_nodes():
+            matched_field_data = self.match_field_node(data_node_list_entry)
             if matched_field_data is not None:
                 match_list.append(matched_field_data)
 
         return match_list
 
-    @staticmethod
-    def match_field_node(field_node_list_entry, field_specifications):
+    def match_field_node(self, field_node_list_entry):
         """
         Checks a supplied candidate field node against all the field specifiers to look for a match. If we
         find a match then return the field value as defined within the field specifier for the matched field.
 
         :param field_node_list_entry:
-        :param field_specifications:
+        :param data_node_descriptor:
         :return:
         """
-        for field_name in field_specifications:
-            field_specification = field_specifications[field_name]
+        descriptor = self.dns_structure['descriptor']
+        for field_name in descriptor:
+            field_specification = descriptor[field_name]
             criteria = field_specification['ancestry_matching_criteria']
 
-            if OutlineNode.match_field(field_node_list_entry, criteria):
-                field_value = OutlineNode.extract_field(field_node_list_entry.node(), field_specification)
+            if DataNodeSpecifier.match_field(field_node_list_entry, criteria):
+                field_value = DataNodeSpecifier.extract_field(field_node_list_entry.node(), field_specification)
                 return field_name, field_value
 
     @staticmethod

@@ -22,9 +22,9 @@ extracted_data_values_01 = (
     (20, 'Section 4', 'Slide 8', 'Bullet Q'),
 )
 extracted_data_values_02 = (
-    (0, 'Key 1: Value 1', 'Key 2: Value 2', 'Non-key 1: Value 3', 'Non-key 2: Value 4', 'Non-key 3: Value 5'),
-    (1, 'Key 1: Value 1', 'Key 2: Value 11', 'Non-key 1: Value 12', 'Non-key 2: Value 13', 'Non-key 3: Value 14'),
-    (2, 'Key 1: Value 6', 'Key 2: Value 7', 'Non-key 1: Value 8', 'Non-key 2: Value 9', 'Non-key 3: Value 10'),
+    (0, 'Value 1', 'Value 2', 'Value 3', 'Value 4', 'Value 5'),
+    (1, 'Value 1', 'Value 11', 'Value 12', 'Value 13', 'Value 14'),
+    (2, 'Value 6', 'Value 7', 'Value 8', 'Value 9', 'Value 10'),
 )
 extracted_data_values_06 = (
     (0, 'Category 1', 'To do list item 1', '(unfilled)'),

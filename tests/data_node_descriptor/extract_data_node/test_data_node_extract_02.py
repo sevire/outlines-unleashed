@@ -4,9 +4,9 @@ import os
 import tests.test_utilities.test_config as tcfg
 from ddt import ddt, unpack, data
 
-from tests.test_utilities.expected_results_data import extracted_data_values_01, extracted_data_values_02, \
+from tests.python_test_data.data_node_specifier_data.expected_results_data import extracted_data_values_01, extracted_data_values_02, \
     extracted_data_values_06, extracted_data_values_07
-from tests.test_utilities.data_node_test_specifiers import test_data_node_specifier_ppt_01, test_data_node_specifier_03x, \
+from tests.python_test_data.data_node_specifier_data.data_node_test_specifiers import test_data_node_specifier_ppt_01, test_data_node_specifier_03x, \
     test_data_node_specifier_05x, test_data_node_specifier_06x, test_data_node_specifier_07, \
     test_data_node_specifier_freeform_notes
 
@@ -38,7 +38,7 @@ class TestDataNodeExtract02(TestCase):
         outline_node_list = list(outline.iter_nodes())
         data_node = outline_node_list[1].node()
 
-        extracted_data_records = data_node.extract_data_node(test_data_node_specifier_ppt_01)
+        extracted_data_records = data_node.extract_data_node_dispatch(test_data_node_specifier_ppt_01)
 
         expected_num_records = 21
 
@@ -62,7 +62,7 @@ class TestDataNodeExtract02(TestCase):
         outline_node_list = list(outline.iter_nodes())
         data_node = outline_node_list[data_node_index].node()
 
-        extracted_data_records = data_node.extract_data_node(test_data_node_specifier_ppt_01)
+        extracted_data_records = data_node.extract_data_node_dispatch(test_data_node_specifier_ppt_01)
 
         test_record = extracted_data_records[index]
         self.assertEqual(section, test_record['section_name'])
@@ -78,7 +78,7 @@ class TestDataNodeExtract02(TestCase):
         outline_node_list = list(outline.iter_nodes())
         data_node = outline_node_list[data_node_index].node()
 
-        extracted_data_records = data_node.extract_data_node(test_data_node_specifier_03x)
+        extracted_data_records = data_node.extract_data_node_dispatch(test_data_node_specifier_03x)
 
         self.assertEqual(3, len(extracted_data_records))
 
@@ -107,7 +107,7 @@ class TestDataNodeExtract02(TestCase):
         outline_node_list = list(outline.iter_nodes())
         data_node = outline_node_list[data_node_index].node()
 
-        extracted_data_records = data_node.extract_data_node(test_data_node_specifier_03x)
+        extracted_data_records = data_node.extract_data_node_dispatch(test_data_node_specifier_03x)
         test_record = extracted_data_records[index]
 
         self.assertEqual(key1, test_record['key_field_1'])
@@ -126,7 +126,7 @@ class TestDataNodeExtract02(TestCase):
         outline_node_list = list(outline.iter_nodes())
         data_node = outline_node_list[data_node_index].node()
 
-        extracted_data_records = data_node.extract_data_node(test_data_node_specifier_05x)
+        extracted_data_records = data_node.extract_data_node_dispatch(test_data_node_specifier_05x)
 
         pass
 
@@ -149,7 +149,7 @@ class TestDataNodeExtract02(TestCase):
         outline_node_list = list(outline.iter_nodes())
         data_node = outline_node_list[data_node_index].node()
 
-        extracted_data_records = data_node.extract_data_node(test_data_node_specifier_06x)
+        extracted_data_records = data_node.extract_data_node_dispatch(test_data_node_specifier_06x)
 
         if category is None:  # Signals end of list and that the test is just to check number of records
             self.assertEqual(index, len(extracted_data_records), "Wrong number of records")
@@ -178,7 +178,7 @@ class TestDataNodeExtract02(TestCase):
         outline_node_list = list(outline.iter_nodes())
         data_node = outline_node_list[data_node_index].node()
 
-        extracted_data_records = data_node.extract_data_node(test_data_node_specifier_07)
+        extracted_data_records = data_node.extract_data_node_dispatch(test_data_node_specifier_07)
         if category is None:  # Signals end of list and that the test is just to check number of records
             self.assertEqual(index, len(extracted_data_records), "Wrong number of records")
         else:
@@ -197,5 +197,5 @@ class TestDataNodeExtract02(TestCase):
         outline_node_list = list(outline.iter_nodes())
         data_node = outline_node_list[data_node_index].node()
 
-        extracted_data_records = data_node.extract_data_node(test_data_node_specifier_freeform_notes)
+        extracted_data_records = data_node.extract_data_node_dispatch(test_data_node_specifier_freeform_notes)
         pass

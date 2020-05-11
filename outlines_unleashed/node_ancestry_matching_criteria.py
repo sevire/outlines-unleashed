@@ -1,5 +1,4 @@
-from opml.node_ancestry_item import NodeAncestryItem
-from opml.node_ancestry_record import NodeAncestryRecord
+from outline.node_ancestry_item import NodeAncestryItem
 
 
 class NodeAncestryMatchingCriteria:

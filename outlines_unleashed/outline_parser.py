@@ -1,4 +1,4 @@
-from opml.outline import Outline
+from outline.outline import Outline
 
 
 class OutlineParser:
@@ -31,7 +31,7 @@ class OutlineParser:
     def extract_data_node(self, data_node_index, data_node_descriptor):
         node_list = self.outline.list_nodes()
         test_data_node = node_list[data_node_index].node()
-        extracted_data_table = test_data_node.extract_data_node(data_node_descriptor)
+        extracted_data_table = test_data_node.extract_data_node_dispatch(data_node_descriptor)
         return extracted_data_table
 
     def transform_data_node(self):

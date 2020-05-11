@@ -15,7 +15,7 @@ import os
 from ddt import ddt, data, unpack
 
 from outlines_unleashed.outline_parser import OutlineParser
-from tests.test_utilities.data_node_test_specifiers import data_node_specifier_test_driver
+from tests.python_test_data.data_node_specifier_data.data_node_test_specifiers import data_node_specifier_test_driver
 
 data_driver_01 = (
     (1,
@@ -37,7 +37,7 @@ class TestDataNodeExtract01(TestCase):
 
         tag_delimiters_text = ('[*', '*]')
 
-        outline_file_path = os.path.join(tcfg.input_files_root, 'opml_data_extraction_test_01.opml')
+        outline_file_path = os.path.join(tcfg.input_files_root, 'outline_unleashed', 'extract_data_node', 'opml_data_extraction_test_01.opml')
         outline_parser = OutlineParser(outline_file_path, tag_delimiters_text)
         self.extracted_data_table = outline_parser.extract_data_node(
             data_node_index=data_node_index,

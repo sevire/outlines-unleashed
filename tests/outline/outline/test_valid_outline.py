@@ -36,7 +36,7 @@ class TestValidOpml(TestCase):
     should have been read correctly for key elements, attributes etc.
     """
 
-    test_data_file = 'outline-test-valid-01.opml'
+    test_data_file = 'unleashed_outline-test-valid-01.opml'
     # NOTE: Don't modify the OPML file or the unit tests will fail.  See OPML file for more information.
 
     local_path = os.path.join('outline', 'outline')

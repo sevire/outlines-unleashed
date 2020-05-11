@@ -6,7 +6,7 @@ The trick here is to put in place the wiring which allows us to deal with unleas
 outline nodes without having to repeat logic created to manage outline nodes (such as the convoluted and recursive
 list_all_nodes method.
 """
-from opml.outline import Outline
+from outline.outline import Outline
 from outlines_unleashed.unleashed_outline_node import UnleashedOutlineNode
 
 

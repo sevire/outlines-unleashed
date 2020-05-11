@@ -267,6 +267,6 @@ class TestFindMatchingNodes(TestCase):
         """
         data_node = self.node_list[data_node_index].node()
 
-        matched_data_items = data_node.match_data_node(data_node_specifier_test_driver[specifier_index])
+        matched_data_items = data_node.match_data_node(, data_node_specifier_test_driver[specifier_index]
 
         self.assertEqual(match_data_node_test_data[specifier_index][2], matched_data_items)

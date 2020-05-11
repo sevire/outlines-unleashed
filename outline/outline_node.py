@@ -69,6 +69,12 @@ class OutlineNode:
 
     @classmethod
     def create_outline_node(cls, outline_text=None, outline_note=None, children_data=None):
+        try:
+            assert outline_text is None or isinstance(outline_text, str), f"outline_text must be a string not a {type(outline_text)}"
+            assert outline_note is None or isinstance(outline_note, str), f"outline_text must be a string not a {type(outline_note)}"
+        except AssertionError as err:
+            raise ValueError(f"Node text and note fields must be of type str. {err}")
+
         attrib = {}
         if outline_text is not None:
             attrib['text'] = outline_text

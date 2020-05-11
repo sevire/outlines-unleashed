@@ -1,4 +1,4 @@
-from unittest import TestCase, skip
+from unittest import TestCase
 from ddt import ddt, data, unpack
 from outline.opml_exceptions import MalformedOutline
 from outline.outline_node import OutlineNode
