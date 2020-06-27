@@ -164,7 +164,7 @@ class DataNodeSpecifier:
 
         return serialized_descriptor
 
-    def extract_data_node_dispatch(self, data_node):
+    def extract_data_node_dispatch(self, data_node, **kwargs):
         """
         Dispatcher method which works out which version of the descriptor structure is being
         passed in and then forwards the descriptor to the appropriate version specific extract
@@ -176,7 +176,7 @@ class DataNodeSpecifier:
         version = self.dns_structure['header']['descriptor_version_number']
 
         if version == '0.1':
-            return self._extract_data_node_v0_1(data_node)
+            return self._extract_data_node_v0_1(data_node, **kwargs)
         else:
             raise InvalidDataNodeSpecifierVersion(f'Version of [{version}] not valid for Data Node Specifier.')
 
@@ -315,16 +315,21 @@ class DataNodeSpecifier:
         override_node = self._override_tag_regex(unleashed_node)
         match_list = []
         for data_node_list_entry in override_node.iter_unleashed_nodes():
-            matched_field_data = self.match_field_node(data_node_list_entry)
-            if matched_field_data is not None:
+            for matched_field_data in self.match_field_node(data_node_list_entry):
                 match_list.append(matched_field_data)
 
         return match_list
 
     def match_field_node(self, field_node_list_entry):
         """
-        Checks a supplied candidate field node against all the field specifiers to look for a match. If we
-        find a match then return the field value as defined within the field specifier for the matched field.
+        Look for one or more fields within a supplied candidate field node.
+
+        A node could contain more than one field as there are four places within a node where a field
+        could live and it is possible to create criteria which match the same node but extract a different
+        value.
+
+        This function is built as a generator to continue to return values until there are no more
+        matches to look for.
 
         :param field_node_list_entry:
         :return:
@@ -336,7 +341,7 @@ class DataNodeSpecifier:
 
             if DataNodeSpecifier.match_field(field_node_list_entry, criteria):
                 field_value = DataNodeSpecifier.extract_field(field_node_list_entry.node(), field_specification)
-                return field_name, field_value
+                yield field_name, field_value
 
     @staticmethod
     def match_field(node_ancestry_record, field_ancestry_criteria):

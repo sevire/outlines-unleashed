@@ -344,8 +344,8 @@ serialized_json_specifier_03x = \
         "descriptor_version_number": "0.1",
         "tag_delimiters": {
             "note_delimiters": [
-                "",
-                ""
+                "[*",
+                "*]"
             ],
             "text_delimiters": [
                 "",
@@ -370,7 +370,7 @@ serialized_json_specifier_03x = \
                     "child_number": null,
                     "text": null,
                     "note": null,
-                    "text_tag": "Key 1",
+                    "text_tag": null,
                     "note_tag": null
                 }
             ]
@@ -391,14 +391,14 @@ serialized_json_specifier_03x = \
                     "child_number": null,
                     "text": null,
                     "note": null,
-                    "text_tag": "Key 1",
+                    "text_tag": null,
                     "note_tag": null
                 },
                 {
                     "child_number": null,
                     "text": null,
                     "note": null,
-                    "text_tag": "Key 2",
+                    "text_tag": null,
                     "note_tag": null
                 }
             ]

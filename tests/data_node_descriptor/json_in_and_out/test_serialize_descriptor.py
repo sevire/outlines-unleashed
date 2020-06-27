@@ -29,7 +29,7 @@ class TestSerializeDescriptor(TestCase):
         """
         self.maxDiff = None
         serialized_descriptor = json.dumps(test_data_node_specifier_03x, default=lambda o: o.__dict__, indent=4)
-        self.assertEqual(serialized_json_01, serialized_descriptor)
+        self.assertEqual(serialized_json_specifier_03x, serialized_descriptor)
 
     def test_opml_to_json(self):
         self.maxDiff = None

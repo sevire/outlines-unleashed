@@ -279,10 +279,11 @@ class TestFindMatchingNodes(TestCase):
         field_node = data_node_list[field_node_index]
         specifier = DataNodeSpecifier(data_node_specifier_test_driver[0])
 
-        match_data = specifier.match_field_node(field_node)
-        self.assertIsNotNone(match_data)
+        match_data = list(specifier.match_field_node(field_node))
+        self.assertEqual(1, len(match_data))
+        self.assertIsNotNone(match_data[0])
 
-        field_name, field_value = match_data
+        field_name, field_value = match_data[0]
         self.assertEqual(expected_field_name, field_name)
         self.assertEqual(expected_field_value, field_value)
 

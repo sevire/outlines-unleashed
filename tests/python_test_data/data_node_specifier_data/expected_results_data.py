@@ -35,9 +35,6 @@ extracted_data_values_06 = (
     (5, None, None, None)  # Last record just used to check total number of records
 )
 extracted_data_values_07 = (
-    (0, 'Category 1', 'To do list item 1', '(unfilled)'),
-    (1, 'Category 1', 'To do list item 2', 'date 1'),
-    (2, 'Category 2', 'To do list item 3', '(unfilled)'),
-    (3, 'Category 2', 'To do list item 4', '(unfilled)'),
-    (4, None, None, None)
+    (0, 'Category 1', 'To do list item 1 embedded in note in same node.', '(unfilled)'),
+    (1, None, None, None)
 )

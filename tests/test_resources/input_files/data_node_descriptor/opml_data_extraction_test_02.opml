@@ -6,12 +6,12 @@
     </editor> -->
     <title>opml_data_extraction_test_01</title>
     <dateCreated>Sun, 24 Nov 2019 16:51:06 GMT</dateCreated>
-    <expansionState>0,1,2,6,12,13,17,24,26,30,31,32,36,40,41,45,46,55</expansionState>
-    <vertScrollState>0</vertScrollState>
-    <windowTop>192</windowTop>
-    <windowLeft>10</windowLeft>
-    <windowRight>692</windowRight>
-    <windowBottom>823</windowBottom>
+    <expansionState>0,1,2,6,12,13,17,24,26,30,31,32,36,40,41,45,46,55,63,72</expansionState>
+    <vertScrollState>63</vertScrollState>
+    <windowTop>139</windowTop>
+    <windowLeft>43</windowLeft>
+    <windowRight>725</windowRight>
+    <windowBottom>770</windowBottom>
   </head>
   <body>
     <outline text="Data Node 1: Slide Deck">
@@ -94,6 +94,19 @@
         <outline text="Note 10"/>
         <outline text="Note 11"/>
       </outline>
+    </outline>
+    <outline text="To Do List 1">
+      <outline text="Category: Category 1"/>
+      <outline text="Item: To do list item 1"/>
+      <outline text="Item: To do list item 2"/>
+      <outline text="Date: date 1"/>
+      <outline text="Date: date 2"/>
+      <outline text="Category: Category 2"/>
+      <outline text="Item: To do list item 3"/>
+      <outline text="Item: To do list item 4"/>
+    </outline>
+    <outline text="To Do List 2">
+      <outline text="Category: Category 1" _note="To do list item 1 embedded in note in same node."/>
     </outline>
   </body>
 </opml>

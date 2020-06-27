@@ -31,6 +31,7 @@ def data_value_generator(data_values_to_generate):
     for expected_record in data_values_to_generate:
         yield expected_record
 
+
 @ddt
 class TestDataNodeExtract02(TestCase):
     test_root = os.path.join(tcfg.input_files_root, 'data_node_descriptor')
@@ -131,11 +132,12 @@ class TestDataNodeExtract02(TestCase):
             note:
             date:
         """
-        data_node_index = 1
+        data_node_index = 64
 
         data_node = self.outline_node_list[data_node_index].node()
         data_node_specifier = DataNodeSpecifier(test_data_node_specifier_06x)
-        extracted_data_records = data_node_specifier.extract_data_node_dispatch(data_node)
+        extracted_data_records = data_node_specifier.extract_data_node_dispatch(data_node,
+                                                                                override_data_node_tag_delim=True)
 
         if category is None:  # Signals end of list and that the test is just to check number of records
             self.assertEqual(index, len(extracted_data_records), "Wrong number of records")
@@ -155,11 +157,12 @@ class TestDataNodeExtract02(TestCase):
             note:
             date:
         """
-        data_node_index = 1
+        data_node_index = 73
 
         data_node = self.outline_node_list[data_node_index].node()
         data_node_specifier = DataNodeSpecifier(test_data_node_specifier_07)
-        extracted_data_records = data_node_specifier.extract_data_node_dispatch(data_node)
+        extracted_data_records = data_node_specifier.extract_data_node_dispatch(data_node,
+                                                                                override_data_node_tag_delim=True)
 
         if category is None:  # Signals end of list and that the test is just to check number of records
             self.assertEqual(index, len(extracted_data_records), "Wrong number of records")

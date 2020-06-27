@@ -43,7 +43,7 @@ test_data_node_specifier_03x = {
         'descriptor_version_number': '0.1',
         'tag_delimiters': {
             'note_delimiters': ['[*', '*]'],
-            'text_delimiters': ['[*', '*]']
+            'text_delimiters': ['', ':']
         }
     },
     'descriptor': {
@@ -140,7 +140,11 @@ test_data_node_specifier_05x = {
 }
 test_data_node_specifier_06x = {
     'header': {
-        'descriptor_version_number': '0.1'
+        'descriptor_version_number': '0.1',
+        'tag_delimiters': {
+            'note_delimiters': ['[*', '*]'],
+            'text_delimiters': ['', ':']
+        }
     },
     'descriptor': {
         'category': {
@@ -175,7 +179,11 @@ test_data_node_specifier_06x = {
 
 test_data_node_specifier_07 = {
     'header': {
-        'descriptor_version_number': '0.1'
+        'descriptor_version_number': '0.1',
+        'tag_delimiters': {
+            'note_delimiters': ['[*', '*]'],
+            'text_delimiters': ['', ':']
+        }
     },
     'descriptor': {
         'category': {
@@ -190,10 +198,10 @@ test_data_node_specifier_07 = {
         'item': {
             'primary_key': 'yes',
             'type': 'string',
-            'field_value_specifier': 'text_value',
+            'field_value_specifier': 'note_value',
             'ancestry_matching_criteria': [
                 NodeAncestryMatchingCriteria(),
-                NodeAncestryMatchingCriteria(text_tag='Item')
+                NodeAncestryMatchingCriteria()
             ]
         },
         'date_due': {
