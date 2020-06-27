@@ -2,7 +2,7 @@ import copy
 import json
 from typing import Optional
 from outlines_unleashed.node_ancestry_matching_criteria import NodeAncestryMatchingCriteria
-from outlines_unleashed.unleashed_outline_exceptions import InvalidDataNodeSpecifierVersion
+from outlines_unleashed.unleashed_outline_exceptions import InvalidDataNodeSpecifierVersion, InvalidDataNodeSpecifier
 
 
 class DataNodeSpecifier:
@@ -34,6 +34,29 @@ class DataNodeSpecifier:
         :param dns_structure:
         """
         self.dns_structure = dns_structure
+        self.validate_data_node_specifier()
+
+    def validate_data_node_specifier(self):
+        """
+        If a data structure is passed in from the user for the DNS then it needs to be checked.  If it is passed in
+        from the from_json method then it will have been created to be well formed.
+
+        For now carry out cursory checks but will need to be more sophisticated later.
+
+        ToDo: Enhance validation for DNS data structure.  Include version specific checking
+        :return:
+        """
+        if 'header' not in self.dns_structure:
+            raise InvalidDataNodeSpecifier(f'[header] record not present in Data Node Specifier')
+        if 'descriptor' not in self.dns_structure:
+            raise InvalidDataNodeSpecifier(f'[descriptor] record not present in Data Node Specifier')
+
+        header = self.dns_structure['header']
+        if 'tag_delimiters' not in header:
+            header['tag_delimiters'] = {
+                'note_delimiters': [None, None],
+                'text_delimiters': [None, None]
+            }
 
     @classmethod
     def from_json(cls, serialized_specifier):
@@ -157,7 +180,7 @@ class DataNodeSpecifier:
         else:
             raise InvalidDataNodeSpecifierVersion(f'Version of [{version}] not valid for Data Node Specifier.')
 
-    def _extract_data_node_v0_1(self, data_node):
+    def _extract_data_node_v0_1(self, data_node, override_data_node_tag_delim=False):
         """
         Parse the sub_tree with self as a root and extract all the nodes which match the criteria defined
         in the data_node_specifier.
@@ -178,16 +201,17 @@ class DataNodeSpecifier:
 
         This is what is then returned to the caller.
 
-        :param data_node:
+        :param data_node: UnleashedOutlineNode object from UnleashedOutline
+        :param override_data_node_tag_delim: If not set, then take tag delimiters from the node (if present). If set
+                                             take them from the DNS.  If neither present and the specifier includes
+                                             tag criteria, then raise an error.
         :return:
         """
-        # If the data node specifier includes tag delimiters, then override any existing values on the data node.
+        if override_data_node_tag_delim:
+            # We are overriding the tag delimiters from the data node with those from the DNS.
+            delimiters = self.dns_structure['header']['tag_delimiters']
 
-        delimiters = self.dns_structure['header']['tag_delimiters']
-        if delimiters['text_delimiters'] is not [None, None]:
             data_node.tag_regex_text = tuple(delimiters['text_delimiters'])
-
-        if delimiters['note_delimiters'] is not [None, None]:
             data_node.tag_regex_note = tuple(delimiters['note_delimiters'])
 
         match_list = self.match_data_node(data_node)
@@ -288,8 +312,9 @@ class DataNodeSpecifier:
         :return: Information required to create a field object for each matched field and construct records
                  from the fields.
         """
+        override_node = self._override_tag_regex(unleashed_node)
         match_list = []
-        for data_node_list_entry in unleashed_node.iter_unleashed_nodes():
+        for data_node_list_entry in override_node.iter_unleashed_nodes():
             matched_field_data = self.match_field_node(data_node_list_entry)
             if matched_field_data is not None:
                 match_list.append(matched_field_data)
@@ -302,7 +327,6 @@ class DataNodeSpecifier:
         find a match then return the field value as defined within the field specifier for the matched field.
 
         :param field_node_list_entry:
-        :param data_node_descriptor:
         :return:
         """
         descriptor = self.dns_structure['descriptor']
@@ -347,5 +371,34 @@ class DataNodeSpecifier:
                     match = False
 
         return match
+
+    def _override_tag_regex(self, unleashed_node):
+        """
+        If the specifier includes overrides for either tag or note regex, then clone the node to make a new one
+        with the updated regex, otherwise just leave alone
+
+        :param unleashed_node:
+        :return:
+        """
+        text_regex_override = self.dns_structure['header']['tag_delimiters']['text_delimiters']
+        note_regex_override = self.dns_structure['header']['tag_delimiters']['note_delimiters']
+
+        clone = False
+        if text_regex_override is not None and text_regex_override != [None, None]:
+            clone = True
+            text_val_to_use = text_regex_override
+        else:
+            text_val_to_use = unleashed_node.tag_regex_text
+        if note_regex_override is not None and note_regex_override != [None, None]:
+            clone = True
+            note_val_to_use = note_regex_override
+        else:
+            note_val_to_use = unleashed_node.tag_regex_note
+
+        if clone is True:
+            return unleashed_node.clone_unleashed_node(text_tag_regex=text_val_to_use,
+                                                       note_tag_regex=note_val_to_use)
+        else:
+            return unleashed_node
 
 

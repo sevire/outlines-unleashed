@@ -14,7 +14,10 @@ import tests.test_utilities.test_config as tcfg
 import os
 from ddt import ddt, data, unpack
 
+from outline.outline import Outline
+from outlines_unleashed.data_node_specifier import DataNodeSpecifier
 from outlines_unleashed.outline_parser import OutlineParser
+from outlines_unleashed.unleashed_outline import UnleashedOutline
 from tests.python_test_data.data_node_specifier_data.data_node_test_specifiers import data_node_specifier_test_driver
 
 data_driver_01 = (
@@ -33,16 +36,24 @@ data_driver_01 = (
 class TestDataNodeExtract01(TestCase):
     def setUp(self) -> None:
         data_node_index = 1
-        data_node_descriptor = data_node_specifier_test_driver[0]
+        data_node_specifier = DataNodeSpecifier(data_node_specifier_test_driver[0])
 
         tag_delimiters_text = ('[*', '*]')
 
-        outline_file_path = os.path.join(tcfg.input_files_root, 'outline_unleashed', 'extract_data_node', 'opml_data_extraction_test_01.opml')
-        outline_parser = OutlineParser(outline_file_path, tag_delimiters_text)
-        self.extracted_data_table = outline_parser.extract_data_node(
-            data_node_index=data_node_index,
-            data_node_descriptor=data_node_descriptor
-        )
+        outline_file_path = os.path.join(tcfg.input_files_root, 'data_node_descriptor', 'opml_data_extraction_test_01.opml')
+
+        outline = Outline.from_opml(outline_file_path)
+        unleashed_outline = UnleashedOutline(outline, default_text_tag_delimiter=tag_delimiters_text)
+
+        data_node = unleashed_outline.list_unleashed_nodes()[data_node_index].node()
+
+        self.extracted_data_table = data_node_specifier.extract_data_node_dispatch(data_node)
+
+        # outline_parser = OutlineParser(outline_file_path, tag_delimiters_text)
+        # self.extracted_data_table = outline_parser.extract_data_node(
+        #     data_node_index=data_node_index,
+        #     data_node_descriptor=data_node_specifier
+        # )
 
     def test_data_node_extract_properties(self):
         self.assertIsInstance(self.extracted_data_table, List)

@@ -33,7 +33,7 @@ class PowerPointGenerator:
     def _print_placholders_in_slide(slide):
         """
         Mainly used for debugging.  Allows us to see what is in a slide which may help track down
-        errors in trying to add new elements (e.g. Missing layouts or placholders)
+        errors in trying to add new elements (e.g. Missing layouts or placeholders)
 
         :param slide:
         :return:
@@ -90,13 +90,12 @@ class PowerPointGenerator:
             subtitle_placeholder = slide.placeholders[subtitle_placeholder_key]
             subtitle_placeholder.text = deck_sub_title
 
-
     @staticmethod
     def _add_section_slide(presentation, section_title_text="(un-specified)", section_sub_title_text="(un-specified)"):
         """
         :param presentation:
-        :param title_text:
-        :param sub_title_text:
+        :param section_title_text:
+        :param section_sub_title_text:
         :return:
         """
         section_title_slide_layout_index = PowerPointGenerator._get_layout_index('section_header')
@@ -178,7 +177,7 @@ class PowerPointGenerator:
         slide = ""
         text_frame = None  # Should be set before referenced as first row will always invoke a new slide
 
-        nodes = list(data_node.iter_nodes())
+        nodes = list(data_node.iter_unleashed_nodes())
         for node_record in nodes:
             node = node_record.node()
             if node_record.depth == 0:

@@ -5,10 +5,12 @@ import os
 from unittest import TestCase
 from ddt import ddt, unpack, data
 
+from outline.outline import Outline
+from outline.outline_node import OutlineNode
+from outlines_unleashed.data_node_specifier import DataNodeSpecifier
 from outlines_unleashed.node_ancestry_matching_criteria import NodeAncestryMatchingCriteria
-from opml.outline import Outline
 import tests.test_utilities.test_config as tcfg
-from opml.outline_node import OutlineNode
+from outlines_unleashed.unleashed_outline import UnleashedOutline
 
 ancestry_node_criteria = (
     (
@@ -59,101 +61,121 @@ node_match_criteria_16 = NodeAncestryMatchingCriteria(text_tag='M')
 
 data_node_specifier_test_driver = [
     {
-        'risk_description': {
-            'primary_key': 'yes',  # Values: start, end, single, null
-            'type': 'string',
-            'field_value_specifier': 'text_value',
-            'ancestry_matching_criteria': [
-                node_match_criteria_00,
-                node_match_criteria_01,
-                node_match_criteria_01a,
-            ],
+        'header': {
+            'descriptor_version_number': "0.1",
+            'tag_delimiters': {
+                'note_delimiters': [None, None],
+                'text_delimiters': ["[*", "*]"]
+            }
+
         },
-        'likelihood': {
-            'primary_key': 'no',  # Values: start, end, single, null
-            'type': 'string',
-            'field_value_specifier': 'text_value',
-            'ancestry_matching_criteria': [
-                node_match_criteria_00,
-                node_match_criteria_01,
-                node_match_criteria_01a,
-                node_match_criteria_02,
-                node_match_criteria_03,
-            ],
-        },
-        'impact': {
-            'primary_key': 'no',  # Values: start, end, single, null
-            'type': 'string',
-            'field_value_specifier': 'text_value',
-            'ancestry_matching_criteria': [
-                node_match_criteria_00,
-                node_match_criteria_01,
-                node_match_criteria_01a,
-                node_match_criteria_02,
-                node_match_criteria_04,
-            ]
-        },
-        'mitigation': {
-            'primary_key': 'no',  # Values: start, end, single, null
-            'type': 'string',
-            'field_value_specifier': 'text_value',
-            'ancestry_matching_criteria': [
-                node_match_criteria_00,
-                node_match_criteria_01,
-                node_match_criteria_01a,
-                node_match_criteria_02,
-                node_match_criteria_05,
-            ]
+        'descriptor': {
+            'risk_description': {
+                'primary_key': 'yes',  # Values: start, end, single, null
+                'type': 'string',
+                'field_value_specifier': 'text_value',
+                'ancestry_matching_criteria': [
+                    node_match_criteria_00,
+                    node_match_criteria_01,
+                    node_match_criteria_01a,
+                ],
+            },
+            'likelihood': {
+                'primary_key': 'no',  # Values: start, end, single, null
+                'type': 'string',
+                'field_value_specifier': 'text_value',
+                'ancestry_matching_criteria': [
+                    node_match_criteria_00,
+                    node_match_criteria_01,
+                    node_match_criteria_01a,
+                    node_match_criteria_02,
+                    node_match_criteria_03,
+                ],
+            },
+            'impact': {
+                'primary_key': 'no',  # Values: start, end, single, null
+                'type': 'string',
+                'field_value_specifier': 'text_value',
+                'ancestry_matching_criteria': [
+                    node_match_criteria_00,
+                    node_match_criteria_01,
+                    node_match_criteria_01a,
+                    node_match_criteria_02,
+                    node_match_criteria_04,
+                ]
+            },
+            'mitigation': {
+                'primary_key': 'no',  # Values: start, end, single, null
+                'type': 'string',
+                'field_value_specifier': 'text_value',
+                'ancestry_matching_criteria': [
+                    node_match_criteria_00,
+                    node_match_criteria_01,
+                    node_match_criteria_01a,
+                    node_match_criteria_02,
+                    node_match_criteria_05,
+                ]
+            }
         }
     },
     {
-        'risk_description': {
-            'primary_key': 'yes',  # Values: start, end, single, null
-            'type': 'string',
-            'field_value_specifier': 'text_value',
-            'ancestry_matching_criteria': [
-                NodeAncestryMatchingCriteria(),
-                NodeAncestryMatchingCriteria(text='Risks'),
-                NodeAncestryMatchingCriteria(),
-                NodeAncestryMatchingCriteria()
-            ],
+        'header': {
+            'descriptor_version_number': "0.1",
+            'tag_delimiters': {
+                'note_delimiters': [None, None],
+                'text_delimiters': ["(-", "-)"]
+            }
+
         },
-        'likelihood': {
-            'primary_key': 'no',  # Values: start, end, single, null
-            'type': 'string',
-            'field_value_specifier': 'text_value',
-            'ancestry_matching_criteria': [
-                NodeAncestryMatchingCriteria(),
-                NodeAncestryMatchingCriteria(text='Risks'),
-                NodeAncestryMatchingCriteria(),
-            ]
-        },
-        'impact': {
-            'primary_key': 'no',  # Values: start, end, single, null
-            'type': 'string',
-            'field_value_specifier': 'text_value',
-            'ancestry_matching_criteria': [
-                NodeAncestryMatchingCriteria(),
-                NodeAncestryMatchingCriteria(text='Risks'),
-                NodeAncestryMatchingCriteria(),
-                NodeAncestryMatchingCriteria(),
-                NodeAncestryMatchingCriteria(child_number=1, text='Attributes'),
-                NodeAncestryMatchingCriteria(text_tag='I')
-            ],
-        },
-        'mitigation': {
-            'primary_key': 'no',  # Values: start, end, single, null
-            'type': 'string',
-            'field_value_specifier': 'text_value',
-            'ancestry_matching_criteria': [
-                NodeAncestryMatchingCriteria(),
-                NodeAncestryMatchingCriteria(text='Risks'),
-                NodeAncestryMatchingCriteria(),
-                NodeAncestryMatchingCriteria(),
-                NodeAncestryMatchingCriteria(child_number=1, text='Attributes'),
-                NodeAncestryMatchingCriteria(text_tag='M')
-            ],
-        },
+        'descriptor': {
+            'risk_description': {
+                'primary_key': 'yes',  # Values: start, end, single, null
+                'type': 'string',
+                'field_value_specifier': 'text_value',
+                'ancestry_matching_criteria': [
+                    NodeAncestryMatchingCriteria(),
+                    NodeAncestryMatchingCriteria(text='Risks'),
+                    NodeAncestryMatchingCriteria(),
+                    NodeAncestryMatchingCriteria()
+                ],
+            },
+            'likelihood': {
+                'primary_key': 'no',  # Values: start, end, single, null
+                'type': 'string',
+                'field_value_specifier': 'text_value',
+                'ancestry_matching_criteria': [
+                    NodeAncestryMatchingCriteria(),
+                    NodeAncestryMatchingCriteria(text='Risks'),
+                    NodeAncestryMatchingCriteria(),
+                ]
+            },
+            'impact': {
+                'primary_key': 'no',  # Values: start, end, single, null
+                'type': 'string',
+                'field_value_specifier': 'text_value',
+                'ancestry_matching_criteria': [
+                    NodeAncestryMatchingCriteria(),
+                    NodeAncestryMatchingCriteria(text='Risks'),
+                    NodeAncestryMatchingCriteria(),
+                    NodeAncestryMatchingCriteria(),
+                    NodeAncestryMatchingCriteria(child_number=1, text='Attributes'),
+                    NodeAncestryMatchingCriteria(text_tag='I')
+                ],
+            },
+            'mitigation': {
+                'primary_key': 'no',  # Values: start, end, single, null
+                'type': 'string',
+                'field_value_specifier': 'text_value',
+                'ancestry_matching_criteria': [
+                    NodeAncestryMatchingCriteria(),
+                    NodeAncestryMatchingCriteria(text='Risks'),
+                    NodeAncestryMatchingCriteria(),
+                    NodeAncestryMatchingCriteria(),
+                    NodeAncestryMatchingCriteria(child_number=1, text='Attributes'),
+                    NodeAncestryMatchingCriteria(text_tag='M')
+                ],
+            },
+        }
     }]
 
 match_data_node_test_data = (
@@ -205,13 +227,16 @@ class TestFindMatchingNodes(TestCase):
     def setUp(self) -> None:
         tag_delimiters_text = ('[*', '*]')
 
-        outline = Outline.from_opml(os.path.join(tcfg.input_files_root,
-                                    'opml_data_extraction_test_01.opml'),
-                                    tag_delimiters_text
-                                    )
+        outline = Outline.from_opml(
+            os.path.join(tcfg.input_files_root,
+                         'data_node_descriptor',
+                         'opml_data_extraction_test_01.opml'),
+            tag_delimiters_text
+        )
 
-        # Create list of all nodes (plus ancestry) to allow acess to nodes by index.
-        self.node_list = list(outline.iter_nodes())
+        unleashed_outline = UnleashedOutline(outline, default_text_tag_delimiter=tag_delimiters_text)
+        # Create list of all nodes (plus ancestry) to allow access to nodes by index.
+        self.node_list = list(unleashed_outline.iter_unleashed_nodes())
 
     @data(*node_match_data)
     @unpack
@@ -225,14 +250,18 @@ class TestFindMatchingNodes(TestCase):
             expected_field_value:
         """
         data_node = self.node_list[data_node_index]
-        data_node_list = list(data_node.node().iter_nodes())
+        data_node_list = list(data_node.node().iter_unleashed_nodes())
         field_node = data_node_list[field_node_index]
 
-        test_matching_criteria = \
-            data_node_specifier_test_driver[0][expected_field_name]['ancestry_matching_criteria']
+        criteria_01 = data_node_specifier_test_driver[0]
+        criteria_02 = criteria_01['descriptor']
+        criteria_03 = criteria_02[expected_field_name]
+        test_matching_criteria = criteria_03['ancestry_matching_criteria']
+
+        # data_node_specifier_test_driver[0]['descriptor'][expected_field_name]['ancestry_matching_criteria']
 
         # Confirm that the field node matches with the appropriate criteria.
-        self.assertTrue(OutlineNode.match_field(field_node, test_matching_criteria))
+        self.assertTrue(DataNodeSpecifier.match_field(field_node, test_matching_criteria))
 
     @data(*node_match_data)
     @unpack
@@ -246,10 +275,11 @@ class TestFindMatchingNodes(TestCase):
             expected_field_value:
         """
         data_node = self.node_list[data_node_index]
-        data_node_list = list(data_node.node().iter_nodes())
+        data_node_list = data_node.node().list_unleashed_nodes()
         field_node = data_node_list[field_node_index]
+        specifier = DataNodeSpecifier(data_node_specifier_test_driver[0])
 
-        match_data = OutlineNode.match_field_node(field_node, data_node_specifier_test_driver[0])
+        match_data = specifier.match_field_node(field_node)
         self.assertIsNotNone(match_data)
 
         field_name, field_value = match_data
@@ -265,8 +295,12 @@ class TestFindMatchingNodes(TestCase):
             data_node_index:
             expected_field_data:
         """
+        specifier = DataNodeSpecifier(data_node_specifier_test_driver[specifier_index])
+        # text_tag_override = specifier.dns_structure['header']['tag_delimiters']['text_delimiters']
+        # data_node_ancestry_record = self.node_list[data_node_index]
+        # data_node_ancestry_record.text_tag_regex = text_tag_override
         data_node = self.node_list[data_node_index].node()
 
-        matched_data_items = data_node.match_data_node(, data_node_specifier_test_driver[specifier_index]
+        matched_data_items = specifier.match_data_node(data_node)
 
-        self.assertEqual(match_data_node_test_data[specifier_index][2], matched_data_items)
+        self.assertEqual(expected_field_data, matched_data_items)

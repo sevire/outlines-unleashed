@@ -1,9 +1,11 @@
 from unittest import TestCase
-from opml.outline import Outline
 import os
 import tests.test_utilities.test_config as tcfg
 from ddt import ddt, unpack, data
 
+from outline.outline import Outline
+from outlines_unleashed.data_node_specifier import DataNodeSpecifier
+from outlines_unleashed.unleashed_outline import UnleashedOutline
 from tests.python_test_data.data_node_specifier_data.expected_results_data import extracted_data_values_01, extracted_data_values_02, \
     extracted_data_values_06, extracted_data_values_07
 from tests.python_test_data.data_node_specifier_data.data_node_test_specifiers import test_data_node_specifier_ppt_01, test_data_node_specifier_03x, \
@@ -31,14 +33,18 @@ def data_value_generator(data_values_to_generate):
 
 @ddt
 class TestDataNodeExtract02(TestCase):
+    test_root = os.path.join(tcfg.input_files_root, 'data_node_descriptor')
+
+    def setUp(self) -> None:
+        self.unleashed_outline = UnleashedOutline(Outline.from_opml(
+            os.path.join(self.test_root, 'opml_data_extraction_test_02.opml')))
+
+        self.outline_node_list = self.unleashed_outline.list_unleashed_nodes()
+
     def test_data_node_extract_01(self):
-        outline = Outline.from_opml(
-            os.path.join(tcfg.input_files_root, 'opml_data_extraction_test_02.opml'))
-
-        outline_node_list = list(outline.iter_nodes())
-        data_node = outline_node_list[1].node()
-
-        extracted_data_records = data_node.extract_data_node_dispatch(test_data_node_specifier_ppt_01)
+        data_node = self.outline_node_list[1].node()
+        data_node_specifier = DataNodeSpecifier(test_data_node_specifier_ppt_01)
+        extracted_data_records = data_node_specifier.extract_data_node_dispatch(data_node)
 
         expected_num_records = 21
 
@@ -56,13 +62,9 @@ class TestDataNodeExtract02(TestCase):
         """
         data_node_index = 1
 
-        outline = Outline.from_opml(
-            os.path.join(tcfg.input_files_root, 'opml_data_extraction_test_02.opml'))
-
-        outline_node_list = list(outline.iter_nodes())
-        data_node = outline_node_list[data_node_index].node()
-
-        extracted_data_records = data_node.extract_data_node_dispatch(test_data_node_specifier_ppt_01)
+        data_node = self.outline_node_list[data_node_index].node()
+        data_node_specifier = DataNodeSpecifier(test_data_node_specifier_ppt_01)
+        extracted_data_records = data_node_specifier.extract_data_node_dispatch(data_node)
 
         test_record = extracted_data_records[index]
         self.assertEqual(section, test_record['section_name'])
@@ -72,13 +74,9 @@ class TestDataNodeExtract02(TestCase):
     def test_data_node_extract_03(self):
         data_node_index = 31
 
-        outline = Outline.from_opml(
-            os.path.join(tcfg.input_files_root, 'opml_data_extraction_test_02.opml'))
-
-        outline_node_list = list(outline.iter_nodes())
-        data_node = outline_node_list[data_node_index].node()
-
-        extracted_data_records = data_node.extract_data_node_dispatch(test_data_node_specifier_03x)
+        data_node = self.outline_node_list[data_node_index].node()
+        data_node_specifier = DataNodeSpecifier(test_data_node_specifier_03x)
+        extracted_data_records = data_node_specifier.extract_data_node_dispatch(data_node)
 
         self.assertEqual(3, len(extracted_data_records))
 
@@ -101,13 +99,10 @@ class TestDataNodeExtract02(TestCase):
         """
         data_node_index = 31
 
-        outline = Outline.from_opml(
-            os.path.join(tcfg.input_files_root, 'opml_data_extraction_test_02.opml'))
+        data_node = self.outline_node_list[data_node_index].node()
+        data_node_specifier = DataNodeSpecifier(test_data_node_specifier_03x)
+        extracted_data_records = data_node_specifier.extract_data_node_dispatch(data_node)
 
-        outline_node_list = list(outline.iter_nodes())
-        data_node = outline_node_list[data_node_index].node()
-
-        extracted_data_records = data_node.extract_data_node_dispatch(test_data_node_specifier_03x)
         test_record = extracted_data_records[index]
 
         self.assertEqual(key1, test_record['key_field_1'])
@@ -119,14 +114,10 @@ class TestDataNodeExtract02(TestCase):
     def test_data_node_extract_05(self):
         data_node_index = 46
 
-        outline = Outline.from_opml(
-            os.path.join(tcfg.input_files_root, 'opml_data_extraction_test_02.opml'),
-            tag_text_delimiter=('', ':'))
+        data_node = self.outline_node_list[data_node_index].node()
+        data_node_specifier = DataNodeSpecifier(test_data_node_specifier_05x)
+        extracted_data_records = data_node_specifier.extract_data_node_dispatch(data_node)
 
-        outline_node_list = list(outline.iter_nodes())
-        data_node = outline_node_list[data_node_index].node()
-
-        extracted_data_records = data_node.extract_data_node_dispatch(test_data_node_specifier_05x)
 
         pass
 
@@ -142,14 +133,9 @@ class TestDataNodeExtract02(TestCase):
         """
         data_node_index = 1
 
-        outline = Outline.from_opml(
-            os.path.join(tcfg.input_files_root, 'OutlinesUnleashed-Examples.opml'),
-            tag_text_delimiter=('', ':'))
-
-        outline_node_list = list(outline.iter_nodes())
-        data_node = outline_node_list[data_node_index].node()
-
-        extracted_data_records = data_node.extract_data_node_dispatch(test_data_node_specifier_06x)
+        data_node = self.outline_node_list[data_node_index].node()
+        data_node_specifier = DataNodeSpecifier(test_data_node_specifier_06x)
+        extracted_data_records = data_node_specifier.extract_data_node_dispatch(data_node)
 
         if category is None:  # Signals end of list and that the test is just to check number of records
             self.assertEqual(index, len(extracted_data_records), "Wrong number of records")
@@ -171,14 +157,10 @@ class TestDataNodeExtract02(TestCase):
         """
         data_node_index = 1
 
-        outline = Outline.from_opml(
-            os.path.join(tcfg.input_files_root, 'OutlinesUnleashed-Examples.opml'),
-            tag_text_delimiter=('', ':'))
+        data_node = self.outline_node_list[data_node_index].node()
+        data_node_specifier = DataNodeSpecifier(test_data_node_specifier_07)
+        extracted_data_records = data_node_specifier.extract_data_node_dispatch(data_node)
 
-        outline_node_list = list(outline.iter_nodes())
-        data_node = outline_node_list[data_node_index].node()
-
-        extracted_data_records = data_node.extract_data_node_dispatch(test_data_node_specifier_07)
         if category is None:  # Signals end of list and that the test is just to check number of records
             self.assertEqual(index, len(extracted_data_records), "Wrong number of records")
         else:
@@ -190,12 +172,8 @@ class TestDataNodeExtract02(TestCase):
     def test_data_node_freeform_notes(self):
         data_node_index = 1
 
-        outline = Outline.from_opml(
-            os.path.join(tcfg.input_files_root, 'FreeFormNotesExample.opml'),
-            tag_text_delimiter=('', ':'))
+        data_node = self.outline_node_list[data_node_index].node()
+        data_node_specifier = DataNodeSpecifier(test_data_node_specifier_freeform_notes)
+        extracted_data_records = data_node_specifier.extract_data_node_dispatch(data_node)
 
-        outline_node_list = list(outline.iter_nodes())
-        data_node = outline_node_list[data_node_index].node()
-
-        extracted_data_records = data_node.extract_data_node_dispatch(test_data_node_specifier_freeform_notes)
         pass

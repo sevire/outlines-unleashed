@@ -67,3 +67,19 @@ class UnleashedOutlineNode:
             yield UnleashedNodeAncestryRecord(outline_node_ancestry_record,
                                               text_tag_regex=self.tag_regex_text,
                                               note_tag_regex=self.tag_regex_note)
+
+    def list_unleashed_nodes(self):
+        return list(self.iter_unleashed_nodes())
+
+    def clone_unleashed_node(self, text_tag_regex=None, note_tag_regex=None):
+        if text_tag_regex is None:
+            text_regex = self.tag_regex_text
+        else:
+            text_regex = text_tag_regex
+
+        if note_tag_regex is None:
+            note_regex = self.tag_regex_note
+        else:
+            note_regex = note_tag_regex
+
+        return UnleashedOutlineNode(self.outline_node, tag_regex_text=text_regex, tag_regex_note=note_regex)

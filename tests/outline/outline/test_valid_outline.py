@@ -39,7 +39,7 @@ class TestValidOpml(TestCase):
     test_data_file = 'unleashed_outline-test-valid-01.opml'
     # NOTE: Don't modify the OPML file or the unit tests will fail.  See OPML file for more information.
 
-    local_path = os.path.join('outline', 'outline')
+    local_path = os.path.join('outline_unleashed', 'unleashed_outline')
 
     @unpack
     @data(*test_data_head)

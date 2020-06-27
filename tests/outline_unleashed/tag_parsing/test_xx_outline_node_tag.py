@@ -2,7 +2,7 @@ import os
 from unittest import TestCase
 from ddt import ddt, data, unpack
 import tests.test_utilities.test_config as tcfg
-from opml.outline import Outline
+from outline.outline import Outline
 from outlines_unleashed.unleashed_outline import UnleashedOutline
 
 tag_extract_data=(
@@ -34,7 +34,10 @@ class TestOutlineNodeTag(TestCase):
     """Tests functionality to extract tag and text from a node."""
     def setUp(self) -> None:
 
-        outline = Outline.from_opml(os.path.join(tcfg.input_files_root, 'opml-test-valid-01.opml'))
+        outline = Outline.from_opml(os.path.join(tcfg.input_files_root,
+                                                 'outline',
+                                                 'opml',
+                                                 'opml-test-valid-opml-01.opml'))
         self.unleashed_outline = UnleashedOutline(outline,
                                                   default_text_tag_delimiter=text_tag_regex,
                                                   default_note_tag_delimiter=note_tag_regex)
