@@ -1,5 +1,4 @@
 import copy
-from typing import Tuple
 
 import outline.opml_exceptions as ex
 from xml.etree import ElementTree
@@ -153,3 +152,9 @@ class Outline:
         if full_validation_flag is True:
             return self.top_outline_node.validate(full_validation_flag=full_validation_flag)
         return True
+
+    def __str__(self):
+        return f"Outline - nodes: {self.top_outline_node.total_sub_nodes()}"
+
+    def __repr__(self):
+        return self.__str__()

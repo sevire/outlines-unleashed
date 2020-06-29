@@ -6,6 +6,8 @@ The trick here is to put in place the wiring which allows us to deal with unleas
 outline nodes without having to repeat logic created to manage outline nodes (such as the convoluted and recursive
 list_all_nodes method.
 """
+import re
+
 from outline.outline import Outline
 from outlines_unleashed.unleashed_outline_node import UnleashedOutlineNode
 
@@ -33,20 +35,31 @@ class UnleashedOutline:
     def list_unleashed_nodes(self):
         return list(self.iter_unleashed_nodes())
 
-    def match_root_nodes(self, matching_criteria):
+    def extract_data_nodes(self):
         """
-        Find the nodes within the outline which are flagged as 'unleashed' nodes (that is nodes which contain
-        structured data for processing).
+        Extract nodes within the outline which have been tagged as data nodes.  A data node is a root node where the
+        sub-tree held under it represents data records in a structured form suitable for extraction using a
+        data node specifier.
 
-        At the time of writing unleashed nodes will be identified by containing the tag "DATA-OBJECT".  This is
-        for convenience during development and testing and may change later.
+        Data Nodes are identified by a JSON string in the note of a node which contains a 'data_node' field name
+        followed by the name of the data node record.
 
-        ToDo: Revise/Confirm approach for identifying root nodes.
-
-        Finds all nodes which match the given criteria.  These will be the root nodes of the data objects embedded
-        within the outline, which can then be processed accordingly (e.g. to extract and tabulate the data)
-
-        :param matching_criteria:
         :return:
         """
-        return [] # Empty list for now.
+        data_nodes = []
+        for node_sequence_number, node in \
+                enumerate([ancestry_record.node() for ancestry_record in self.list_unleashed_nodes()]):
+            note_text = node.note
+
+            # For now, just look for curly braces beginning and end.  Later use more sophisticated JSON decoding.
+            data_node_regex = r"\{data_node: (\w+)\}"
+            match = re.search(data_node_regex, note_text)
+
+            if match is not None:
+                data_node_name = match.group(1)
+                data_nodes.append({
+                    'data_node_name': data_node_name,
+                    'data_node_list_index': node_sequence_number
+                })
+
+        return data_nodes
