@@ -30,7 +30,7 @@ powerpoint_slide_structure = {
 
 class PowerPointGenerator:
     @staticmethod
-    def _print_placholders_in_slide(slide):
+    def _print_placeholders_in_slide(slide):
         """
         Mainly used for debugging.  Allows us to see what is in a slide which may help track down
         errors in trying to add new elements (e.g. Missing layouts or placeholders)
@@ -78,7 +78,7 @@ class PowerPointGenerator:
         title_slide_layout_index = PowerPointGenerator._get_layout_index('deck_title')
         title_slide_layout = presentation.slide_layouts[title_slide_layout_index]
         slide = presentation.slides.add_slide(title_slide_layout)
-        PowerPointGenerator._print_placholders_in_slide(slide)
+        # PowerPointGenerator._print_placeholders_in_slide(slide)
 
         if deck_title is not None:
             title_placeholder_key = PowerPointGenerator._get_placeholder_index('deck_title', 'deck_title')
@@ -101,7 +101,7 @@ class PowerPointGenerator:
         section_title_slide_layout_index = PowerPointGenerator._get_layout_index('section_header')
         section_title_slide_layout = presentation.slide_layouts[section_title_slide_layout_index]
         slide = presentation.slides.add_slide(section_title_slide_layout)
-        PowerPointGenerator._print_placholders_in_slide(slide)
+        # PowerPointGenerator._print_placeholders_in_slide(slide)
 
         if section_title_text is not None:
             section_title_placeholder_key = PowerPointGenerator._get_placeholder_index('section_header', 'section_header')
@@ -119,7 +119,7 @@ class PowerPointGenerator:
         bullet_slide_layout = presentation.slide_layouts[bullet_slide_layout_index]
 
         slide = presentation.slides.add_slide(bullet_slide_layout)
-        PowerPointGenerator._print_placholders_in_slide(slide)
+        # PowerPointGenerator._print_placeholders_in_slide(slide)
 
         shapes = slide.shapes
 
@@ -134,16 +134,22 @@ class PowerPointGenerator:
         return text_frame
 
     @staticmethod
-    def _add_slide_bullet(text_frame, bullet_text, bullet_level):
+    def _add_slide_bullet(text_frame, bullet_text, bullet_level, first_bullet=False):
         """
         Adds a slide of bullets to the presentation.
 
         :param text_frame:
         :param bullet_text:
+        :param bullet_level:
+        :param first_bullet: If the first bullet is being added, we don't need to add a paragraph as one would have
+                             been created when the slide was created.
         :return:
         """
 
-        paragraph = text_frame.add_paragraph()
+        if first_bullet is True:
+            paragraph = text_frame.paragraphs[0]
+        else:
+            paragraph = text_frame.add_paragraph()
         paragraph.text = bullet_text
         paragraph.level = bullet_level
 
@@ -177,6 +183,7 @@ class PowerPointGenerator:
         slide = ""
         text_frame = None  # Should be set before referenced as first row will always invoke a new slide
 
+        first_bullet = None
         nodes = list(data_node.iter_unleashed_nodes())
         for node_record in nodes:
             node = node_record.node()
@@ -193,12 +200,14 @@ class PowerPointGenerator:
                 # nodes.
                 title = node.text
                 text_frame = self._add_content_slide(prs, title)
+                first_bullet = True
             else:
                 # Depth is more than two so this is a bullet to add to the existing text_frame
 
                 bullet_depth = node_record.depth - 3
                 bullet_text = node.text
 
-                self._add_slide_bullet(text_frame, bullet_text, bullet_depth)
+                self._add_slide_bullet(text_frame, bullet_text, bullet_depth, first_bullet)
+                first_bullet = False
 
         prs.save(output_ppt_path)
