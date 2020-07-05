@@ -71,6 +71,11 @@ class UnleashedOutlineNode:
     def list_unleashed_nodes(self):
         return list(self.iter_unleashed_nodes())
 
+    def get_node(self, node_number):
+        return UnleashedNodeAncestryRecord(self.outline_node.get_node(node_number),
+                                           text_tag_regex=self.tag_regex_text,
+                                           note_tag_regex=self.tag_regex_note)
+
     def clone_unleashed_node(self, text_tag_regex=None, note_tag_regex=None):
         if text_tag_regex is None:
             text_regex = self.tag_regex_text

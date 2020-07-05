@@ -35,6 +35,13 @@ class UnleashedOutline:
     def list_unleashed_nodes(self):
         return list(self.iter_unleashed_nodes())
 
+    def get_node(self, node_number):
+        top_level_outline_node = self.outline.top_outline_node
+        unleashed_top_level_node = UnleashedOutlineNode(top_level_outline_node,
+                                                        tag_regex_text=self.default_text_tag_delimiter,
+                                                        tag_regex_note=self.default_note_tag_delimiter)
+        return unleashed_top_level_node.get_node(node_number)
+
     def extract_data_nodes(self):
         """
         Extract nodes within the outline which have been tagged as data nodes.  A data node is a root node where the
