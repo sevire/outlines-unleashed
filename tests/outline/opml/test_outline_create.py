@@ -11,6 +11,20 @@ relative_folder = os.path.join("outline", "opml")
 
 test_opml_output_file_01 = "test_opml_creation_01.opml"
 
+outline_expected_node_results = [
+    (1, 0, 1, "Created node 1: Level 1", "Created node note 1"),
+    (2, 1, 2, "Created node 2: Level 2", "Created node note 2"),
+    (3, 0, 1, "Created node 3: Level 1", "Created node note 3"),
+    (4, 0, 1, "Created node 4: Level 1", "Created node note 4"),
+]
+
+
+def generate_outline_from_test_data(outline):
+    for record in outline_expected_node_results:
+        node_sequence_number, parent_node_number, level, text, note = record
+
+        outline.
+
 
 @ddt
 class TestOutlineCreate(TestCase):

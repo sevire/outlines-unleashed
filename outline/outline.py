@@ -128,6 +128,19 @@ class Outline:
 
     @classmethod
     def from_scratch(cls, top_level_outline_nodes=None):
+        """
+        Create basic Outline object from scratch.  The Outline will be a valid one and include all the elements required
+        for it to be compliant with the OPML spec (v2.0)
+
+        There must be at least one outline node under the body of an OPML file, so the Outline object requires at least
+        one OutlineNode object as the second level after the root (which is a body element in the OPML spec).
+
+        So you can supply the OutlineNodes which are to sit under the body node, or supply nothing, and the method
+        will create a single OutlineNode beneath the body node.
+
+        :param top_level_outline_nodes: List of of OutlineNode objects to sit under the body element of the outline.
+        :return:
+        """
         if top_level_outline_nodes is None:
             # Top level nodes not provide, so create single node as OutlineNode under the body element.
 
