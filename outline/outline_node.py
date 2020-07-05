@@ -1,7 +1,6 @@
 import copy
 
-from xml.etree.ElementTree import Element
-
+from xml.etree.ElementTree import Element, ElementTree
 from outline import outline_utilities as outil
 from outline.node_ancestry_item import NodeAncestryItem
 from outline.node_ancestry_record import NodeAncestryRecord
@@ -93,6 +92,11 @@ class OutlineNode:
         node = OutlineNode(element)
 
         return node
+
+    def add_node(self, text, note):
+        # ToDo: Remove hard-coding around creation of new Outline Node (should be with other outline utilities)
+        attributes = {'text': text, '_note': note}
+        self._node.append(Element('outline', attributes))
 
     def validate(self, full_validation_flag):
         """

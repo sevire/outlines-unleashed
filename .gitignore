@@ -6,3 +6,4 @@
 /.idea/workspace.xml
 /outlines_unleashed.egg-info/
 /tests/test_resources/output_files/
+outline/__pycache__/
