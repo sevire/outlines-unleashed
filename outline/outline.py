@@ -4,7 +4,8 @@ import outline.opml_exceptions as ex
 from xml.etree import ElementTree
 from outline import outline_utilities as outil
 from outline.outline_node import OutlineNode
-from outline.outline_utilities import is_valid_tag
+from outline.outline_node_definition import outline_identity, outline_int, outline_list
+from outline.outline_utilities import is_valid_tag, value_serialize
 
 
 class Outline:
@@ -64,7 +65,7 @@ class Outline:
         self.ownerId = outil.get_valid_element_value(self._head, 'ownerId')
         self.docs = outil.get_valid_element_value(self._head, 'docs')
         self.expansionState = outil.get_valid_element_value(self._head, 'expansionState')
-        self.verticalScrollState = outil.get_valid_element_value(self._head, 'verticalScrollState')
+        self.vertScrollState = outil.get_valid_element_value(self._head, 'vertScrollState')
         self.windowTop = outil.get_valid_element_value(self._head, 'windowTop')
         self.windowLeft = outil.get_valid_element_value(self._head, 'windowLeft')
         self.windowBottom = outil.get_valid_element_value(self._head, 'windowBottom')
@@ -125,6 +126,63 @@ class Outline:
 
         return cls(*Outline.initialise_opml_tree(outline_copy), full_validate=full_validate)
 
+    @classmethod
+    def from_scratch(cls, top_level_outline_nodes=None):
+        if top_level_outline_nodes is None:
+            # Top level nodes not provide, so create single node as OutlineNode under the body element.
+
+            top_level_outline_nodes = [OutlineNode.create_outline_node(outline_text="text", outline_note="note")]
+
+        opml = ElementTree.Element('opml', {"version": "2.0"})
+
+        body = ElementTree.Element('body')
+        body.extend([node._node for node in top_level_outline_nodes])
+
+        head = ElementTree.Element('head')
+
+        opml.extend([head, body])
+
+        root = ElementTree.ElementTree(opml)
+        return cls(*Outline.initialise_opml_tree(root))
+
+    def create_opml_tree_structure(self):
+        """
+        Does the opposite of initialise_opml_tree.  Creates the top opml node with a head and body underneath.
+
+        :return:
+        """
+        head_sub_elements = {
+            "title": outline_identity(self.title, "from"),
+            "dateCreated": outline_identity(self.dateCreated, "from"),
+            "dateModified": outline_identity(self.dateModified, "from"),
+            "ownerName": outline_identity(self.ownerName, "from"),
+            "ownerEmail": outline_identity(self.ownerEmail, "from"),
+            "ownerId": outline_identity(self.ownerId, "from"),
+            "docs": outline_identity(self.docs, "from"),
+            "expansionState": outline_list(self.expansionState, "from"),
+            "vertScrollState": outline_int(self.vertScrollState, "from"),
+            "windowTop": outline_int(self.windowTop, "from"),
+            "windowLeft": outline_int(self.windowLeft, "from"),
+            "windowBottom": outline_int(self.windowBottom, "from"),
+            "windowRight": outline_int(self.windowRight, "from"),
+        }
+        opml = ElementTree.Element("opml", {"version": "2.0"})
+
+        head = ElementTree.Element("head")
+        for sub_element in head_sub_elements:
+            if head_sub_elements[sub_element] is not None:
+                sub = ElementTree.Element(sub_element)
+                sub.text = head_sub_elements[sub_element]
+                head.append(sub)
+
+        body = ElementTree.Element("body")
+        for outline_node in self.top_outline_node:
+            body.append(outline_node._node)
+        opml.append(head)
+        opml.append(body)
+
+        return opml
+
     def total_sub_nodes(self):
         return self.top_outline_node.total_sub_nodes()
 
@@ -158,3 +216,21 @@ class Outline:
 
     def __repr__(self):
         return self.__str__()
+
+    def write_opml(self, pathname):
+        """
+        Re-creates an OPML structure from the encapsulated outline, then writes it out to an opml file.
+
+        :param pathname:
+        :return:
+        """
+        opml = self.create_opml_tree_structure()
+
+        tree = ElementTree.ElementTree()
+        tree._setroot(opml)
+
+        tree.write(pathname)
+
+
+
+

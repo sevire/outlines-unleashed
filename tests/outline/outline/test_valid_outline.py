@@ -21,7 +21,7 @@ test_data_head = (
     ('ownerId', None),
     ('docs', None),
     ('expansionState', ['0', '16', '32']),
-    ('verticalScrollState', None),
+    ('vertScrollState', None),
     ('windowTop', 193),
     ('windowLeft', 400),
     ('windowBottom', 873),

@@ -24,39 +24,68 @@ NOTE: I've tried not to go too far with this.  I don't think there is a schema f
 from collections import namedtuple
 
 
-# Define functions to use to decode value of elements (these will be shared by elements which contain the same type
-def outline_identity(text):
-    # If there is no parsing to do just return the value un-transformed.
+# Define functions to use to decode value of elements (these will be shared by elements which contain the same type)
+def outline_identity(value, direction="to"):
     """
-    Args:
-        text:
+    Converts field of a given type either from text to the type or from the type back to text (for serialization)
+    This one is just text to text and doesn't do anything.
+
+    :param value:
+    :param direction: "to" - from xml text field to the type; "from" - from type to text field.
+    :return:
     """
-    return text
+    # Just passes through the value in either direction.
+    if value is None:
+        return None
+    else:
+        return value
 
 
-def outline_int(text):
-    """parses text value from outline to an int value.
-
-    Args:
-        text:
+def outline_int(value, direction="to"):
     """
-    return int(text)
+    Converts from text to value or from value to text
 
-
-def outline_list(text):
-    """Created to deal with the case of the expansion_state element but will
-    work for any element where the data is represented as a comma separated
-    list.
-
-    Args:
-        text:
+    :param value:
+    :param direction: "to" - from xml text field to the type; "from" - from type to text field.
+    :return:
     """
-    data_list = text.split(",")
+    if direction == "to":
+        return int(value)
+    elif direction == "from":
+        if value is None:
+            return None
+        else:
+            return str(value)
+    else:
+        raise ValueError(f"Invalid direction in converting opml field, was {direction}, should be 'to' or 'from'")
 
-    # Remove any whitespace
-    clean_list = list(map(lambda x: x.strip(), data_list))
 
-    return clean_list
+def outline_list(value, direction="to"):
+    """
+    Converts from text field with commas separated list items to list (expansion list) or from vice versa
+
+    :param value:
+    :param direction: "to" - from xml text field to the type; "from" - from type to text field.
+    :return:
+    """
+    if direction == "to":
+        data_list = value.split(",")
+
+        # Remove any whitespace
+        clean_list = list(map(lambda x: int(x.strip()), data_list))
+
+        return clean_list
+    elif direction == "from":
+        if value is None:
+            return None
+        else:
+            str_parts = map(lambda x: str(x[1])+", " if x[0] < len(value)-1 else str(x[1]), enumerate(value))
+            field_value = ""
+            for text_part in str_parts:
+                field_value += text_part
+            return field_value
+    else:
+        raise ValueError(f"Invalid direction in converting opml field, was {direction}, should be 'to' or 'from'")
 
 
 # Help make specification of a particular attribute or element more readable by using named_tuple.

@@ -172,3 +172,7 @@ def validate_attributes(element):
 
     for attribute_name in element_attributes:
         is_valid_attribute(element, attribute_name)
+
+
+def value_serialize(value):
+    return value if value is not None else ""

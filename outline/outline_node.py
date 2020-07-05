@@ -181,11 +181,6 @@ class OutlineNode:
     def iter(self):
         return self.iter_nodes()
 
-    @property
-    def ancestry(self):
-        ancestry = None
-        return ancestry
-
     def __str__(self):
         text_display_string = self._process_string_for_display(self.text)
         note_display_string = self._process_string_for_display(self.note)
@@ -221,5 +216,3 @@ class OutlineNode:
     @property
     def short_note(self):
         return self._process_string_for_display(self.note)
-
-
