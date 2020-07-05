@@ -216,6 +216,9 @@ class Outline:
         """
         return self.top_outline_node.list_nodes()
 
+    def get_node(self, node_number):
+        return self.top_outline_node.get_node(node_number)
+
     def validate(self, full_validation_flag):
         # Minimum validation.
         if self.version != '2.0':

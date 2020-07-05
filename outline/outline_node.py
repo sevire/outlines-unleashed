@@ -151,6 +151,21 @@ class OutlineNode:
     def list_nodes(self):
         return list(self.iter_nodes())
 
+    def get_node(self, node_number):
+        """
+        Gets the nth node of the outline when taken in depth first sequence (that is the order in which nodes appear
+        in the opml file).
+
+        Quite a brute force approach, just iterate through the nodes and stop when we get to the right one.  But still
+        more efficient than listing all the nodes then accessing through a list[index].
+
+        :param node_number:
+        :return:
+        """
+        for index, record in enumerate(self.iter_nodes()):
+            if index == node_number:
+                return record
+
     def total_sub_nodes(self):
         count = len(self) + 1
         for node in self:
