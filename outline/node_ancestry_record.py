@@ -94,3 +94,6 @@ class NodeAncestryRecord:
 
         # Don't include the root node in the child_ancestry
         return tuple(child_ancestry[1:])
+
+    def __str__(self):
+        return f"Depth: {self.depth}, Text: {str(self.node().text)}, Note: {str(self.node().note)}"

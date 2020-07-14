@@ -1,0 +1,18 @@
+{1:1} No indent: Level 1
+    {2:2} Indented by one tab is level 2 node
+    {3:3} Another level 2 node
+        {4:4} Level 3 node
+            {5:5} Level 4 node:
+            {6:6} L4. The next line is completely blank.  Should be ignored.
+
+            {8:7} L4. The next line has indentation characters but the content is blank.  Should be ignored.
+        
+            {10:8} L4. The next line has whitespace not interpretable as indentation character but content is blank.  Should be ignored.
+   	  	  	  
+            {12:9} L4. We should now be on input line 12 but output node 9.
+                {13:10} Level 5 Node.
+    {14:11} Level 2 node, yet another 1
+{15:12} Level 1 again
+    {16:13} Level 2 again
+{17:14} Level 1 etc.
+    {18:15} L2 Last lineLevel 1

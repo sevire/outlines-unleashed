@@ -1,3 +1,6 @@
+from xml.etree import ElementTree
+
+from outline.opml_exceptions import MalformedOutline
 from outline.outline import Outline
 from outline_preprocessors.preprocessor_generic import PreprocessorGeneric
 
@@ -151,11 +154,11 @@ class PreprocessorTextIndent(PreprocessorGeneric):
     @classmethod
     def from_textfile(cls, file_path, config_object):
         with open(file_path, "r") as fh:
-            data = fh.read()
-        return cls(data, config_object)
+            lines = [line for line in fh.readlines()]
+        return cls(lines, config_object)
 
     def pre_process_outline(self):
-        parse_output = self.parse_text(self.outline, self.config_object)
+        parse_output = self.parse_text()
         outline = self.create_outline(parse_output)
 
         return outline
@@ -224,7 +227,8 @@ class PreprocessorTextIndent(PreprocessorGeneric):
         else:
             return indent_level, node_text
 
-    def strip_newline(self, string_from_file):
+    @staticmethod
+    def strip_newline(string_from_file):
         """
         Removes any file control characters from a line read from a file.
 
@@ -239,5 +243,66 @@ class PreprocessorTextIndent(PreprocessorGeneric):
         else:
             return string_from_file
 
+    def add_child_nodes(self, node, level, nodes_data, nodes_data_index):
+        """
+        Recursive method which constructs a tree of outline elements from the parsed text file records.
+
+        When called the method will iterate through the remaining node records and:
+        - If the next node is a level higher, call recursively
+        - If the next node is at the same level, add to an array of
+
+
+        :param node:
+        :param level:
+        :param nodes_data:
+        :param nodes_data_index:
+        :return:
+        """
+        child_nodes = []
+        end_of_nodes_data = False
+        index = nodes_data_index - 1
+        while not end_of_nodes_data:
+            if index < len(nodes_data) - 1:
+                index += 1
+            else:
+                end_of_nodes_data = True
+            if not end_of_nodes_data:
+                new_node_data = nodes_data[index]
+                new_level, text = new_node_data
+                new_node = self.create_outline_element(text)
+                if new_level == level + 1:
+                    # Child node so add to array of child nodes
+                    child_nodes.append(new_node)
+                elif new_level == level + 2:
+                    # Next level down the tree so call recursively, to add to the last node at this level
+                    # which is the last element in child_nodes.
+                    index = self.add_child_nodes(child_nodes[-1], level + 1, nodes_data, index)
+                elif new_level > level + 2:
+                    raise MalformedOutline(f"Text indented outline jumped two generations at '{text}'")
+                elif new_level <= level:
+                    # We are at a leaf node so can append all children and return to the last recursive call
+                    node.extend(child_nodes)
+                    return index - 1
+        node.extend(child_nodes)
+        return index
+
+
     def create_outline(self, outline_spec):
-        return Outline.from_scratch()
+        """
+        After parsing a text file, calculating the indent level and extracting the text from each line, we can now
+        construct the outline itself.
+
+        In an opml file, the outline nodes at the top of the tree hang off the body element.  But in order to simplify
+        the use of recursion to generate the tree, we will initially generate the tree hanging from an outline element,
+        and then once the tree is created, create the well-formed xml tree to correctly drive the Outline object.
+
+        :param outline_spec:
+        :return:
+        """
+
+        top_level_node = self.create_outline_element(None)
+
+        self.add_child_nodes(top_level_node, 0, outline_spec, 0)
+        outline_child_nodes = [outline_element for outline_element in top_level_node]
+
+        return Outline.from_scratch(outline_child_nodes)

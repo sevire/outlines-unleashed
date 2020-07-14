@@ -149,7 +149,7 @@ class Outline:
         opml = ElementTree.Element('opml', {"version": "2.0"})
 
         body = ElementTree.Element('body')
-        body.extend([node._node for node in top_level_outline_nodes])
+        body.extend(top_level_outline_nodes)
 
         head = ElementTree.Element('head')
 

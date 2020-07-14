@@ -1,3 +1,4 @@
+from xml.etree import ElementTree
 from outline.outline import Outline
 
 
@@ -24,3 +25,22 @@ class PreprocessorGeneric:
     def pre_process_outline(self):
         # Replace with actual code
         return Outline.from_scratch()
+
+    @staticmethod
+    def create_outline_element(text, note=None):
+        """
+        Creates and XML outline element encoding the text and node contents as text and _node attributes.
+
+        (Remember at the heart of an OutlineNode object is an outline xml element.
+
+        :param text:
+        :param note:
+        :return:
+        """
+
+        attributes = {
+            'text': text,
+            '_note': note
+        }
+
+        return ElementTree.Element('outline', attributes)

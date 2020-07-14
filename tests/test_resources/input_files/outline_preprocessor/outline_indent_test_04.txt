@@ -1,0 +1,9 @@
+L1 no indent
+    L2 indent
+        L3 Xxxxxxxxx
+        L3 Yyyyyyyyy
+            L4 Zzzzzz
+        L3 Wwwwwww
+        L3 Vvvvvvvv
+L1 second node at L1
+L1 third node at L1

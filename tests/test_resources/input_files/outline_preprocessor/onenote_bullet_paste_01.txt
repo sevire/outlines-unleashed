@@ -1,0 +1,21 @@
+• This is a level one note
+	• This is a level 2 note
+		○ This is a level 3 note
+		○ Another level 3 note
+			§ Level 4 A
+			§ Level 4 B
+				□ Level 5 A
+				□ Level 5 B
+					® Level 6 A
+					® Level 6 B
+						◊ Level 7A
+						◊ Level 7B
+							} ;lkj;klj
+								– L;kj;lkj;
+									w L;kj;lkj
+										w L;kj;klj
+											w ;lkj;lkj
+	• Level 2
+		○ Level 3 again
+	• Level 2 Again
+• Level 1 again
