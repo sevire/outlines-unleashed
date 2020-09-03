@@ -3,9 +3,7 @@ Checks properties of a .PPT file to aid in testing against expected after creati
 """
 import os
 from unittest import TestCase
-
 from ddt import ddt, data, unpack
-
 import tests.test_utilities.test_config as tcfg
 from outline.outline import Outline
 from outlines_unleashed.unleashed_outline import UnleashedOutline

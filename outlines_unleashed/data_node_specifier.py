@@ -148,6 +148,22 @@ class DataNodeSpecifier:
 
         return field_value
 
+    def extract_field_default_value(self, field_name):
+        """
+        Mainly needed when a data node is being extracted and there isn't a sub-node which matches a particular field. The
+        record will need a value for each field which is specified and the specifier for a field allows a default value
+        to be specified.  If none is specified then None is returned.
+
+        :param field_name:
+        :return:
+        """
+        descriptor = self.dns_structure['descriptor']
+        field_specifier = descriptor[field_name]
+        if 'default_value' in field_specifier:
+            return field_specifier['default_value']
+        else:
+            return None
+
     @staticmethod
     def to_json(descriptor):
         """
@@ -243,7 +259,7 @@ class DataNodeSpecifier:
                     # Check whether any fields un-filled and issue warning but update with default value.
                     for field in data_node_record:
                         if data_node_record[field] is None:
-                            data_node_record[field] = '(unfilled)'
+                            data_node_record[field] = self.extract_field_default_value(field)
 
                     # Append copy of record to output table so don't keep updating same pointer.
                     data_node_table.append(copy.deepcopy(data_node_record))
