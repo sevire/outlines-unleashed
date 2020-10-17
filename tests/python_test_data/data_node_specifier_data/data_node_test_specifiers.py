@@ -18,6 +18,7 @@ test_data_node_specifier_ppt_01 = {
             'primary_key': 'yes',  # Values: start, end, single, null
             'type': 'string',
             'field_value_specifier': 'text_value',
+            'default_value': '(no-title)',
             'ancestry_matching_criteria': [
                 NodeAncestryMatchingCriteria(),
                 NodeAncestryMatchingCriteria(),
@@ -28,6 +29,7 @@ test_data_node_specifier_ppt_01 = {
             'primary_key': 'yes',  # Values: start, end, single, null
             'type': 'string',
             'field_value_specifier': 'text_value',
+            'default_value': '(no-bullet)',
             'ancestry_matching_criteria': [
                 NodeAncestryMatchingCriteria(),
                 NodeAncestryMatchingCriteria(),
@@ -169,6 +171,7 @@ test_data_node_specifier_06x = {
             'primary_key': 'yes',
             'type': 'string',
             'field_value_specifier': 'text_value',
+            'default_value': '(no-date)',
             'ancestry_matching_criteria': [
                 NodeAncestryMatchingCriteria(),
                 NodeAncestryMatchingCriteria(text_tag='Date')
@@ -208,6 +211,7 @@ test_data_node_specifier_07 = {
             'primary_key': 'no',
             'type': 'string',
             'field_value_specifier': 'text_value',
+            'default_value': '(no-date)',
             'ancestry_matching_criteria': [
                 NodeAncestryMatchingCriteria(),
                 NodeAncestryMatchingCriteria(text_tag='Date')
