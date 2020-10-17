@@ -49,6 +49,8 @@ class TestDataNodeExtract01(TestCase):
 
         self.extracted_data_table = data_node_specifier.extract_data_node_dispatch(data_node)
 
+        pass
+
         # outline_parser = OutlineParser(outline_file_path, tag_delimiters_text)
         # self.extracted_data_table = outline_parser.extract_data_node(
         #     data_node_index=data_node_index,

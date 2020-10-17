@@ -295,6 +295,7 @@ data_node_specifier_test_driver = [
                 'primary_key': 'no',  # Values: start, end, single, null
                 'type': 'string',
                 'field_value_specifier': 'text_value',
+                'default_value': '(unfilled)',
                 'ancestry_matching_criteria': [
                     NodeAncestryMatchingCriteria(),
                     NodeAncestryMatchingCriteria(text='Risks'),

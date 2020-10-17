@@ -196,6 +196,23 @@ class DataNodeSpecifier:
         else:
             raise InvalidDataNodeSpecifierVersion(f'Version of [{version}] not valid for Data Node Specifier.')
 
+    @staticmethod
+    def _initialise_data_node_record(field_list):
+        return {key: None for key in field_list}
+
+    def _cleanup_extracted_record(self, data_node_record):
+        """
+        The record is passed in after all fields that are in the data node have been extracted.  This method
+        then checks for fields which weren't populated and gives them the default value for the field, taken
+        from the data node specifier.
+
+        :param data_node_record:
+        :return:
+        """
+        for field in data_node_record:
+            if data_node_record[field] is None:
+                data_node_record[field] = self.extract_field_default_value(field)
+
     def _extract_data_node_v0_1(self, data_node, override_data_node_tag_delim=False):
         """
         Parse the sub_tree with self as a root and extract all the nodes which match the criteria defined
@@ -234,10 +251,9 @@ class DataNodeSpecifier:
         data_node_table = []
         primary_key_field_list = self.extract_field_names(primary_key_only=True)
         non_primary_key_field_list = self.extract_field_names(primary_key_only=False)
-        empty_data_node_record = {key: None for key in primary_key_field_list + non_primary_key_field_list}
 
         # Initialise record for first row
-        data_node_record = empty_data_node_record
+        data_node_record = self._initialise_data_node_record(primary_key_field_list+non_primary_key_field_list)
 
         for match in match_list:
             field_name, field_value = match
@@ -256,10 +272,7 @@ class DataNodeSpecifier:
                     # - Any fields which aren't populated will trigger a warning and an appropriate
                     #   default value assigned.
 
-                    # Check whether any fields un-filled and issue warning but update with default value.
-                    for field in data_node_record:
-                        if data_node_record[field] is None:
-                            data_node_record[field] = self.extract_field_default_value(field)
+                    self._cleanup_extracted_record(data_node_record)
 
                     # Append copy of record to output table so don't keep updating same pointer.
                     data_node_table.append(copy.deepcopy(data_node_record))
@@ -290,10 +303,7 @@ class DataNodeSpecifier:
                     pass
 
         # All data fields have been processed, so just clean up the final record and add to the list.
-        for field_name in data_node_record:
-            if data_node_record[field_name] is None:
-                data_node_record[field_name] = '(unfilled)'
-
+        self._cleanup_extracted_record(data_node_record)
         data_node_table.append(copy.copy(data_node_record))
 
         return data_node_table
