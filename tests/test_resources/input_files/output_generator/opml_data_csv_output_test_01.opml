@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="2.0">
+  <head><!-- <editor inspector-sidebar-visible="yes">
+      <sidebar visible="yes" width="197"/>
+      <column name="text" width="754"/>
+    </editor> -->
+    <title>data_extract_test_file_01</title>
+    <dateCreated>Wed, 30 Oct 2019 18:50:13 GMT</dateCreated>
+    <expansionState>0,1,2,3,7,8,11,12,15,16,17,18,19,21,22,24,25,26</expansionState>
+    <vertScrollState>5</vertScrollState>
+    <windowTop>28</windowTop>
+    <windowLeft>0</windowLeft>
+    <windowRight>775</windowRight>
+    <windowBottom>659</windowBottom>
+  </head>
+  <body>
+    <outline text="Data For Parsing #1" _note="{data_node: data_node_01}">
+      <outline text="Risks">
+        <outline text="There is a possibility that the world might end">
+          <outline text="Attributes">
+            <outline text="[*L*]Low"/>
+            <outline text="[*I*]Very High"/>
+            <outline text="[*M*]Pray every day"/>
+          </outline>
+        </outline>
+        <outline text="It may take too long to build and we don&apos;t have anything in the meantime">
+          <outline text="Attributes">
+            <outline text="[*I*]High"/>
+            <outline text="[*L*]High"/>
+          </outline>
+        </outline>
+        <outline text="It may be too expensive to build">
+          <outline text="Attributes">
+            <outline text="[*L*]High"/>
+            <outline text="[*I*]Medium"/>
+          </outline>
+        </outline>
+      </outline>
+    </outline>
+    <outline text="Data For Parsing #2" _note="{data_node: data_node_02}">
+      <outline text="Risks">
+        <outline text="High">
+          <outline text="It may take too long to build and we don&apos;t have anything in the meantime">
+            <outline text="Attributes">
+              <outline text="(-I-) High"/>
+            </outline>
+          </outline>
+          <outline text="It may be too expensive to build">
+            <outline text="Attributes">
+              <outline text="(-I-) Medium"/>
+            </outline>
+          </outline>
+        </outline>
+        <outline text="Low">
+          <outline text="There is a possibility that the world might end">
+            <outline text="Attributes">
+              <outline text="(-I-)Very High"/>
+              <outline text="(-M-)Pray every day"/>
+            </outline>
+          </outline>
+        </outline>
+      </outline>
+    </outline>
+  </body>
+</opml>

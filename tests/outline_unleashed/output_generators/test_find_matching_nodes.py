@@ -230,7 +230,7 @@ class TestFindMatchingNodes(TestCase):
         outline = Outline.from_opml(
             os.path.join(tcfg.input_files_root,
                          'data_node_descriptor',
-                         'opml_data_extraction_test_01.opml'),
+                         'opml_csv_output_test_01.opml'),
             tag_delimiters_text
         )
 
