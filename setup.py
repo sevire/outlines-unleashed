@@ -5,9 +5,9 @@ with open("README.md", "r") as fh:
 
 setup(
     name='outlines-unleashed',
-    version='0.0.8',
+    version='0.0.11',
     packages=['outline', 'tests', 'tests.outline', 'tests.outline_unleashed', 'resources', 'resources.test',
-              'outlines_unleashed', 'output_generators'],
+              'outlines_unleashed', 'outline_preprocessors', 'output_generators'],
     url='https://github.com/sevire/outlines-unleashed',
     license='TBD',
     author='Thomas Gaylard',

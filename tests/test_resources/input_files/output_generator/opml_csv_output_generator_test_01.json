@@ -1,0 +1,67 @@
+{
+  "header": {
+    "id": "ian-test-risk-data1",
+    "name": "Simple Use case 2: Risk information.",
+    "type": "data-object",
+    "tag_delimiters": {
+      "text_delimiters": ["[*", "*["],
+      "note_delimiters": ["[*", "*]"]
+    }
+  },
+  "descriptor": [
+    {
+      "depth": 2,
+      "ancestry": [
+        1,
+        "None"
+      ],
+      "tag": "None",
+      "text": "None",
+      "primary-key": true,
+      "field-name": "Risk Description",
+      "field-value": "node-text"
+    },
+    {
+      "depth": 4,
+      "ancestry": [
+        1,
+        "None",
+        1,
+        "None"
+      ],
+      "tag": "L",
+      "text": "None",
+      "primary-key": false,
+      "field-name": "Risk Likelihood",
+      "field-value": "node-text"
+    },
+    {
+      "depth": 4,
+      "ancestry": [
+        1,
+        "None",
+        1,
+        "None"
+      ],
+      "tag": "I",
+      "text": "None",
+      "primary-key": false,
+      "field-name": "Risk Impact",
+      "field-value": "node-text"
+    },
+    {
+      "depth": 4,
+      "ancestry": [
+        1,
+        "None",
+        1,
+        "None"
+      ],
+      "tag": "M",
+      "text": "None",
+      "primary-key": false,
+      "field-name": "Risk Mitigation",
+      "field-value": "node-text"
+    }
+  ]
+}
