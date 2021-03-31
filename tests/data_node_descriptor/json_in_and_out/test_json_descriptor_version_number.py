@@ -37,7 +37,7 @@ class TestJsonDescVersionNumber(TestCase):
         node_list = list(unleashed_outline.iter_unleashed_nodes())
         root_node = node_list[root_node_index].node()
 
-        specifier = DataNodeSpecifier.from_json(json_specifier_string)
+        specifier = DataNodeSpecifier.from_json_string(json_specifier_string)
 
         extracted_data_nodes = specifier.extract_data_node_dispatch(root_node)
 

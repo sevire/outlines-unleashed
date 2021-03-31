@@ -59,7 +59,15 @@ class DataNodeSpecifier:
             }
 
     @classmethod
-    def from_json(cls, serialized_specifier):
+    def from_json_file(cls, json_path):
+        with open(json_path, 'r') as json_fp:
+            json_object = json.load(json_fp)
+
+            return DataNodeSpecifier._from_json_object(json_object)
+
+
+    @classmethod
+    def from_json_string(cls, serialized_specifier):
         """
         Overloaded function which will take one of:
         - A string containing a JSON representation of a DND
@@ -70,43 +78,57 @@ class DataNodeSpecifier:
         create a new DND object.
         :return:
         """
-        specifier_raw = json.loads(serialized_specifier)
+        specifier_json_object = json.loads(serialized_specifier)
+
+        return DataNodeSpecifier._from_json_object(specifier_json_object)
+
+
+
+    @classmethod
+    def _from_json_object(cls, json_object):
+        """
+        Common processing from the .from_json_file and .from_json_string methods, once json has been turned into
+        a dict object.
+
+        :param json_object:
+        :return:
+        """
 
         # For now a very clunky approach to creating a Python descriptor from the JSON
         # sourced dict structure.  Will refactor into an independent class later
         # ToDo: Extract descriptor structure and logic into separate class
 
         # Set up the empty structure into which we will build the specifier, and initialise header fields from json
-        specifier = {'header': specifier_raw['header'], 'descriptor': {}}
+        specifier = {'header': json_object['header'], 'descriptor': {}}
 
         # Add the text and note tag regex delimiters.
         # ToDo: Develop clear rules for the value to use for tag delimiters to indicate not specified etc.
-        text_tag_delimiter_left = specifier_raw['header']['tag_delimiters']['text_delimiters'][0]
-        text_tag_delimiter_right = specifier_raw['header']['tag_delimiters']['text_delimiters'][1]
-        note_tag_delimiter_left = specifier_raw['header']['tag_delimiters']['note_delimiters'][0]
-        note_tag_delimiter_right = specifier_raw['header']['tag_delimiters']['note_delimiters'][1]
+        text_tag_delimiter_left = json_object['header']['tag_delimiters']['text_delimiters'][0]
+        text_tag_delimiter_right = json_object['header']['tag_delimiters']['text_delimiters'][1]
+        note_tag_delimiter_left = json_object['header']['tag_delimiters']['note_delimiters'][0]
+        note_tag_delimiter_right = json_object['header']['tag_delimiters']['note_delimiters'][1]
 
         specifier['header']['tag_delimiters'] = {}
         specifier['header']['tag_delimiters']['text_delimiters'] = [text_tag_delimiter_left, text_tag_delimiter_right]
         specifier['header']['tag_delimiters']['note_delimiters'] = [note_tag_delimiter_left, note_tag_delimiter_right]
 
-        raw_descriptor = specifier_raw['descriptor']
+        raw_descriptor = json_object['descriptor']
 
         for raw_field_descriptor in raw_descriptor:
             specifier['descriptor'][raw_field_descriptor] = {}
-            for field_property in specifier_raw['descriptor'][raw_field_descriptor]:
+            for field_property in json_object['descriptor'][raw_field_descriptor]:
                 if field_property == 'ancestry_matching_criteria':
                     # We need to replace the list of dicts with a list of NodeAncestryMatchingCriteria objects
                     specifier['descriptor'][raw_field_descriptor][field_property] = []
 
-                    criteria_list = specifier_raw['descriptor'][raw_field_descriptor][field_property]
+                    criteria_list = json_object['descriptor'][raw_field_descriptor][field_property]
                     for criteria_set in criteria_list:
                         criteria_object = NodeAncestryMatchingCriteria(
                             child_number=criteria_set.get('child_number', None),
                             text=criteria_set.get('text', None),
                             note=criteria_set.get('note', None),
                             text_tag=criteria_set.get('text_tag', None),
-                            note_tag=criteria_set.get('note_tag', None)
+                            note_tag=criteria_set.get('note_tag', None),
                         )
                         specifier['descriptor'][raw_field_descriptor][field_property].append(criteria_object)
                 else:

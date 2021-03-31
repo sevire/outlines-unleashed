@@ -59,7 +59,7 @@ class TestSerializeDescriptor(TestCase):
         :param non_key3:  Expected data
         :return:
         """
-        descriptor = DataNodeSpecifier.from_json(serialized_json_specifier_03x)
+        descriptor = DataNodeSpecifier.from_json_string(serialized_json_specifier_03x)
         # tag_text_delimiter = tuple(descriptor.dns_structure['header']['tag_delimiters']['text_delimiters'])
         # tag_note_delimiter = tuple(descriptor.dns_structure['header']['tag_delimiters']['note_delimiters'])
 

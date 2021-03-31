@@ -40,7 +40,7 @@ class TestDataNodeExtract01(TestCase):
 
         tag_delimiters_text = ('[*', '*]')
 
-        outline_file_path = os.path.join(tcfg.input_files_root, 'data_node_descriptor', 'opml_csv_output_test_01.opml')
+        outline_file_path = os.path.join(tcfg.input_files_root, 'data_node_descriptor', 'opml_data_extraction_test_01.opml')
 
         outline = Outline.from_opml(outline_file_path)
         unleashed_outline = UnleashedOutline(outline, default_text_tag_delimiter=tag_delimiters_text)

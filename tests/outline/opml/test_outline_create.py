@@ -31,7 +31,7 @@ def generate_outline_from_test_data():
     top_level_nodes = []
     for record in [item for item in outline_expected_node_results if item[1] == 0]:
         _, _, _, text, note = record
-        top_level_nodes.append(OutlineNode.create_outline_node(text, note))
+        top_level_nodes.append(OutlineNode.create_outline_node(text, note)._node)
 
     # Now create the outline before adding other nodes
     new_outline = Outline.from_scratch(top_level_nodes)

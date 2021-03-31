@@ -1,0 +1,59 @@
+{
+    "header": {
+        "descriptor_version_number": "0.1",
+        "tag_delimiters": {
+            "note_delimiters": ["[*", "*]"],
+            "text_delimiters": ["[*", "*]"]
+        }
+    },
+    "descriptor": {
+        "risk_description": {
+            "primary_key": "yes",
+            "type": "string",
+            "field_value_specifier": "text_value",
+            "ancestry_matching_criteria": [
+                {},
+                {"text":  "Risks"},
+                {}
+            ]
+        },
+        "likelihood": {
+            "primary_key": "yes",
+            "type": "string",
+            "field_value_specifier": "text_value",
+            "ancestry_matching_criteria": [
+                {},
+                {"text": "Risks"},
+                {},
+                {"child_number":  "1", "text": "Attributes"},
+                {"text_tag": "L"}
+            ]
+        },
+        "impact": {
+            "primary_key": "yes",
+            "type": "string",
+            "field_value_specifier": "text_value",
+            "ancestry_matching_criteria": [
+                {},
+                {"text": "Risks"},
+                {},
+                {"child_number":  "1", "text": "Attributes"},
+                {"text_tag": "I"}
+            ]
+        },
+        "mitigation": {
+            "primary_key": "yes",
+            "type": "string",
+            "field_value_specifier": "text_value",
+            "default_value": "(unfilled)",
+            "ancestry_matching_criteria": [
+                {},
+                {"text": "Risks"},
+                {},
+                {"child_number":  "1", "text": "Attributes"},
+                {"text_tag": "M"}
+
+            ]
+        }
+    }
+}
